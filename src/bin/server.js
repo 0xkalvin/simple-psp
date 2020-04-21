@@ -9,13 +9,13 @@ const { PORT = 3000 } = process.env;
 const onListening = () =>
   console.log(`Server is running on http://localhost:${PORT}`);
 
-const startServer = (app) => app.listen(PORT, onListening);
+const startServer = app => app.listen(PORT, onListening);
 
-const initApplication = (app, database) => {
+const initPSP = (app, database) => {
   ensureDatabaseIsConnected(database)
     .then(() => startServer(app))
-    .then((server) => setupGracefulShutdown(server, database))
+    .then((server) => setupGracefulShutdown(process, server, database))
     .catch(console.error);
 };
 
-initApplication(app, database);
+initPSP(app, database);
