@@ -10,8 +10,7 @@ const ensureDatabaseIsConnected = (db) => {
         return Promise.delay(RETRY_TIMEOUT)
           .then(() => tryToConnect(retry + 1));
       }
-      console.error(err);
-      return Promise.reject(new Error('Database has failed to connect'));
+      return Promise.reject(err);
     });
 
   return tryToConnect();

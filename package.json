@@ -8,7 +8,9 @@
   "scripts": {
     "dev": "nodemon",
     "start": "node src/bin/server.js",
-    "db:create": "npx sequelize db:create"
+    "test": "ava --verbose --serial 'test/**/*.test.js'",
+    "db:create": "npx sequelize db:create",
+    "db:migrate": "npx sequelize db:migrate"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
@@ -24,7 +26,10 @@
     "sequelize": "^5.21.6"
   },
   "devDependencies": {
+    "ava": "^3.7.1",
+    "dotenv": "^8.2.0",
     "nodemon": "^2.0.3",
-    "sequelize-cli": "^5.5.1"
+    "sequelize-cli": "^5.5.1",
+    "supertest": "^4.0.2"
   }
 }
