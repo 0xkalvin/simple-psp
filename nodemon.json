@@ -1,0 +1,12 @@
+{
+    "ignore": [
+    "test",
+    ".git",
+    "node_modules"
+    ],
+    "watch": [
+    "src"
+    ],
+    "exec": "node src/bin/server.js",
+    "ext": "js"
+}

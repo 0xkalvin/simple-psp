@@ -1,0 +1,42 @@
+version: '3.4'
+
+services:
+  postgres:
+    network_mode: host
+    image: postgres
+    volumes:
+      - $HOME/docker/volumes/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+        - POSTGRES_DB=psp-test
+        - POSTGRES_PASSWORD=postgres
+        - PGDATA=/tmp
+  psp:
+    network_mode: host
+    build: .
+    entrypoint: node src/bin/server.js
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=test
+      - DB_NAME=psp-test
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+  migrate:
+    network_mode: host
+    build: .
+    entrypoint: node_modules/.bin/sequelize db:migrate --config src/database/config.js --migrations-path src/database/migrations/
+    environment:
+      - NODE_ENV=test
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - postgres

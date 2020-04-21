@@ -1,0 +1,30 @@
+{
+  "name": "simple-psp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:0xkalvin/simple-psp.git",
+  "author": "kalvin <kalvin.vasconcellos@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon",
+    "start": "node src/bin/server.js",
+    "db:create": "npx sequelize db:create"
+  },
+  "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "@hapi/joi-date": "^2.0.1",
+    "bluebird": "^3.7.2",
+    "cors": "^2.8.5",
+    "cuid": "^2.1.8",
+    "express": "^4.17.1",
+    "helmet": "^3.22.0",
+    "pg": "^8.0.2",
+    "pg-hstore": "^2.3.3",
+    "ramda": "^0.27.0",
+    "sequelize": "^5.21.6"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3",
+    "sequelize-cli": "^5.5.1"
+  }
+}
