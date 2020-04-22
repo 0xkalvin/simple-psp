@@ -1,4 +1,4 @@
-
+const service = require('./service');
 const { createSchema } = require('./schema');
 const { buildSuccessResponse, buildFailureResponse } = require('../../lib/http/response');
 
@@ -11,7 +11,9 @@ const create = async (req, res, next) => {
             return buildFailureResponse(res, 422, error);
         }
 
-        return buildSuccessResponse(res, 201, validPayload);
+        const response = await service.createTransaction(validPayload);
+
+        return buildSuccessResponse(res, 201, response);
 
     } catch (err) {
         return next(err);

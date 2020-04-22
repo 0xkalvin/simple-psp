@@ -22,10 +22,10 @@ const create = (connection, dataTypes) => {
         values: ["debit_card", "credit_card"],
         field: "payment_method",
       },
-      cardNumber: {
+      cardLastFourNumbers: {
         type: dataTypes.STRING(4),
         allowNull: false,
-        field: "card_number",
+        field: "card_last_four_numbers",
       },
       cardHolderName: {
         type: dataTypes.TEXT,
@@ -38,7 +38,7 @@ const create = (connection, dataTypes) => {
         field: "card_expiration_date",
       },
       cardVerificationCode: {
-        type: dataTypes.STRING(3),
+        type: dataTypes.STRING(4),
         allowNull: false,
         field: "card_verification_code",
       },
