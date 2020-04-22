@@ -23,7 +23,7 @@ const createPayable = async transactionPayload => {
         return createdAtAsDate.setDate(createdAtAsDate.getDate() + daysUntilPayment);
     }
 
-    const isCredit = transactionPayload.payment_method === "credit_card";
+    const isCredit = transactionPayload.paymentMethod === "credit_card";
 
     const { status, fee, daysUntilPayment } = isCredit ? payablesRules.credit : payablesRules.debit;
     
@@ -32,7 +32,7 @@ const createPayable = async transactionPayload => {
         status,
         transactionId: transactionPayload.id,
         receivableAmount: discountFee(transactionPayload.amount, fee),
-        paymentDate: setPaymentDate(transactionPayload.created_at, daysUntilPayment),
+        paymentDate: setPaymentDate(transactionPayload.createdAt, daysUntilPayment),
     };
 
     return await Payable.create(payablePayload);

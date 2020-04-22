@@ -1,13 +1,19 @@
 const database = require('../../database');
 const { Transaction } = database.models;
-
-const getLastFourNumbers = cardNumber => cardNumber.substr(-4);
+const payableService = require('../payable/service');
 
 const createTransaction = async transactionPayload => {
-    return await Transaction.create({
+    
+    const getLastFourNumbers = cardNumber => cardNumber.substr(-4);
+
+    const transaction =  await Transaction.create({
         ...transactionPayload,
         cardLastFourNumbers: getLastFourNumbers(transactionPayload.cardNumber),
     });
+
+    await payableService.createPayable(transaction);
+
+    return transaction;
 }
 
 

@@ -9,26 +9,26 @@ const create = (connection, dataTypes) => {
           primaryKey: true,
         },
         transactionId: {
-            type: types.UUID,
+            type: dataTypes.UUID,
             allowNull: false,
             field: "transaction_id",
         },
         status: {
-            type: types.ENUM,
+            type: dataTypes.ENUM,
             allowNull: false,
             values: ['paid', 'waiting_funds'],
         },
         paymentDate: {
-            type: types.DATE,
+            type: dataTypes.DATE,
             allowNull: false,
             field: "payment_date",
         },
         fee: {
-            type: types.DOUBLE,
+            type: dataTypes.DOUBLE,
             allowNull: false,
         },
         receivableAmount: {
-            type: types.DOUBLE,
+            type: dataTypes.DOUBLE,
             allowNull: false,
             field: "receivable_amount",
         },
