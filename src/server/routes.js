@@ -11,6 +11,8 @@ router.post('/transactions', transaction.create);
 router.get('/transactions', transaction.index);
 router.all('/transactions', notAllowed);
 router.get('/payables', payable.index);
+router.all('/payables', notAllowed);
+
 
 
 module.exports = router;
