@@ -11,11 +11,18 @@ const onListening = () =>
 
 const startServer = app => app.listen(PORT, onListening);
 
+
+const handleInitializationError = err => {
+  console.error(err);
+
+  process.exit(1);
+}
+
 const initPSP = (app, database) => {
   ensureDatabaseIsConnected(database)
     .then(() => startServer(app))
     .then((server) => setupGracefulShutdown(process, server, database))
-    .catch(console.error);
+    .catch(handleInitializationError);
 };
 
 initPSP(app, database);
