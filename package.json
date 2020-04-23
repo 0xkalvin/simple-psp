@@ -8,11 +8,10 @@
   "scripts": {
     "dev": "nodemon",
     "start": "node src/bin/server.js",
-    "test": "ava --verbose --serial 'test/**/*.test.js'",
+    "test": "NODE_ENV=test nyc ava --verbose 'test/**/*.test.js'",
     "db:create": "npx sequelize db:create",
     "db:migrate": "npx sequelize db:migrate",
     "db:migrate:undo:all": "npx sequelize db:migrate:undo:all"
-
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
@@ -31,7 +30,9 @@
     "ava": "^3.7.1",
     "dotenv": "^8.2.0",
     "nodemon": "^2.0.3",
+    "nyc": "^15.0.1",
     "sequelize-cli": "^5.5.1",
+    "sinon": "^9.0.2",
     "supertest": "^4.0.2"
   }
 }
