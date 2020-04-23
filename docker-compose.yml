@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     environment:
-        - POSTGRES_DB=psp-test
+        - POSTGRES_DB=psp
         - POSTGRES_PASSWORD=postgres
         - PGDATA=/tmp
   psp:
@@ -21,7 +21,7 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=test
-      - DB_NAME=psp-test
+      - DB_NAME=psp
     volumes:
       - .:/app
       - /app/node_modules
@@ -32,7 +32,7 @@ services:
   migrate:
     network_mode: host
     build: .
-    entrypoint: node_modules/.bin/sequelize db:migrate --config src/database/config.js --migrations-path src/database/migrations/
+    entrypoint: ["sh", "docker-test-entrypoint.sh"]
     environment:
       - NODE_ENV=test
     volumes:
