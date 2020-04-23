@@ -4,7 +4,9 @@ const buildSuccessResponse = (res, status, data = {}) => {
 }
 
 const buildFailureResponse = (res, status = 500, err) => {
-    console.error(err);
+    if(process.env.NODE_ENV !== "test"){
+        console.error(err);
+    }
     return res.status(status).send(err);
 }
 
