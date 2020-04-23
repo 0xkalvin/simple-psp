@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     environment:
-        - POSTGRES_DB=psp
+        - POSTGRES_DB=postgres
         - POSTGRES_PASSWORD=postgres
         - PGDATA=/tmp
   psp:
@@ -21,7 +21,6 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=test
-      - DB_NAME=psp
     volumes:
       - .:/app
       - /app/node_modules
