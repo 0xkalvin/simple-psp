@@ -40,3 +40,14 @@ services:
       - /app/node_modules
     depends_on:
       - postgres
+  test:
+    network_mode: host
+    build: .
+    entrypoint: npm run test
+    environment:
+      - NODE_ENV=test
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - migrate
