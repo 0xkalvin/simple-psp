@@ -1,6 +1,7 @@
 const service = require('./service');
 const { createSchema } = require('./schema');
 const { buildSuccessResponse, buildFailureResponse } = require('../../lib/http/response');
+const { UnprocessableEntityError  } = require('../../lib/errors');
 
 
 const create = async (req, res, next) => {
@@ -8,7 +9,7 @@ const create = async (req, res, next) => {
         const { error, value: validPayload } = createSchema.validate(req.body);
 
         if(error){
-            return buildFailureResponse(req, res, 422, error.details);
+            return buildFailureResponse(req, res, new UnprocessableEntityError(error.details));
         }
 
         const response = await service.createTransaction(validPayload);
