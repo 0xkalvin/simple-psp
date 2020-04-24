@@ -2,6 +2,8 @@ const req = {
   query: {},
   params: {},
   body: {},
+  method: '',
+  path: '',
 };
 
 const res = {

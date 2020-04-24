@@ -1,6 +1,6 @@
 const test = require("ava");
 
-const { req, res, next } = require("../helpers/handler");
+const { req, res, next } = require("../helpers/handlers");
 const { create } = require("../../src/resources/transaction");
 
 test("Should create transaction successfully", async (t) => {

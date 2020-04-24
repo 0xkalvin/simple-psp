@@ -8,7 +8,7 @@ const create = async (req, res, next) => {
         const { error, value: validPayload } = createSchema.validate(req.body);
 
         if(error){
-            return buildFailureResponse(res, 422, error);
+            return buildFailureResponse(req, res, 422, error.details);
         }
 
         const response = await service.createTransaction(validPayload);

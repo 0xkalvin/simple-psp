@@ -3,11 +3,16 @@ const buildSuccessResponse = (res, status, data = {}) => {
     return res.status(status).send(data);
 }
 
-const buildFailureResponse = (res, status = 500, err) => {
+const buildFailureResponse = (req, res, status, errors) => {
     if(process.env.NODE_ENV !== "test"){
-        console.error(err);
+        console.error(errors);
     }
-    return res.status(status).send(err);
+    const payload = {
+        errors,
+        url: req.path,
+        method: req.method
+    };
+    return res.status(status).send(payload);
 }
 
 

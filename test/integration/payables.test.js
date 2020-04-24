@@ -1,6 +1,6 @@
 const test = require("ava");
 
-const { req, res, next } = require("../helpers/handler");
+const { req, res, next } = require("../helpers/handlers");
 const { index } = require("../../src/resources/payable");
 
 test("Should return a list of payables with status 200", async (t) => {
