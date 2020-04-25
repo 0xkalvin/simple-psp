@@ -1,9 +1,20 @@
-const { buildFailureResponse } = require('../lib/http/response');
-
+const { InternalServerError, BadRequestError } = require("../lib/errors");
+const { buildFailureResponse } = require("../lib/http/response");
 
 module.exports = (err, req, res, next) => {
-    console.error(err);
+  const normalizeError = (err) => {
     const status = err.statusCode || err.status || 500;
-    const payload = status < 500 ? { type: 'Bad Request' } : { type: 'Internal Server Error'}
-    return buildFailureResponse(req, res, status, [ payload ]);
-}
+
+    if (status < 500) {
+      return new BadRequestError();
+    }
+
+    return new InternalServerError();
+  };
+
+  console.error(err.stack);
+
+  const normalizedError = normalizeError(err);
+
+  return buildFailureResponse(req, res, normalizedError);
+};
