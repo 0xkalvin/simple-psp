@@ -16,6 +16,7 @@
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "@hapi/joi-date": "^2.0.1",
+    "aws-sdk": "^2.663.0",
     "bluebird": "^3.7.2",
     "cors": "^2.8.5",
     "cuid": "^2.1.8",

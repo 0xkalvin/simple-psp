@@ -1,3 +1,4 @@
+const payableQueue = require('./queue');
 const database = require('../../database');
 const { Payable } = database.models;
 
@@ -35,7 +36,11 @@ const createPayable = async transactionPayload => {
         paymentDate: setPaymentDate(transactionPayload.createdAt, daysUntilPayment),
     };
 
-    return await Payable.create(payablePayload);
+    const payable = await Payable.create(payablePayload);
+
+    payableQueue.push(payable);
+
+    return payable;
 
 }
 
