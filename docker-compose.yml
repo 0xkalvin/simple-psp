@@ -12,22 +12,27 @@ services:
         - POSTGRES_DB=postgres
         - POSTGRES_PASSWORD=postgres
         - PGDATA=/tmp
+  sqs:
+    image: s12v/elasticmq
+    ports:
+      - "9324:9324"
+    volumes:
+      - ./infrastructure/sqs.conf:/etc/elasticmq/elasticmq.conf
   psp:
     network_mode: host
     build: .
     entrypoint: node src/bin/server.js
     volumes:
-      - .:/app
-      - /app/node_modules
+      - .:/psp
+      - /psp/node_modules
     environment:
       - NODE_ENV=test
-    volumes:
-      - .:/app
-      - /app/node_modules
+      - SQS_ENDPOINT=http://localhost:9324
     ports:
       - "3000:3000"
     depends_on:
       - postgres
+      - sqs
   migrate:
     network_mode: host
     build: .
@@ -35,8 +40,8 @@ services:
     environment:
       - NODE_ENV=test
     volumes:
-      - .:/app
-      - /app/node_modules
+      - .:/psp
+      - /psp/node_modules
     depends_on:
       - postgres
   test:
@@ -46,7 +51,7 @@ services:
     environment:
       - NODE_ENV=test
     volumes:
-      - .:/app
-      - /app/node_modules
+      - .:/psp
+      - /psp/node_modules
     depends_on:
       - migrate
