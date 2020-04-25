@@ -6,10 +6,10 @@ dev:
 	npm run dev
 
 all:
-	sudo docker-compose up psp
+	sudo docker-compose up --build psp
 
-database:
-	sudo docker-compose up -d postgres
+infra:
+	sudo docker-compose up -d postgres sqs
 
 clean:
 	sudo docker-compose down --rmi all

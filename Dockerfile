@@ -1,8 +1,8 @@
 FROM node:12.10-alpine
 
-WORKDIR /app
+WORKDIR /psp
 
-COPY package.json /app/package.json
+COPY package.json /psp/package.json
 
 RUN npm i
 
