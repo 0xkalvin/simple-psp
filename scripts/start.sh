@@ -1,6 +1,5 @@
-#!/usr/bin/env bash
-
-node_modules/.bin/sequelize db:create --config src/database/config.js
+#!/bin/sh
 
 node_modules/.bin/sequelize db:migrate --config src/database/config.js --migrations-path src/database/migrations/
 
+node src/bin/server.js

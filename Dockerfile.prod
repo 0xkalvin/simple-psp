@@ -1,0 +1,14 @@
+FROM node:12.10-alpine
+
+WORKDIR /psp
+
+COPY package.json /psp/package.json
+COPY scripts/start.sh /psp
+
+
+RUN npm i
+
+COPY . .
+
+EXPOSE 3000
+ENTRYPOINT ["sh", "-c", "/app/start.sh"]

@@ -1,4 +1,4 @@
-version: '3.4'
+version: "3.4"
 
 services:
   postgres:
@@ -9,9 +9,14 @@ services:
     ports:
       - "5432:5432"
     environment:
-        - POSTGRES_DB=postgres
-        - POSTGRES_PASSWORD=postgres
-        - PGDATA=/tmp
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=postgres
+      - PGDATA=/tmp
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   sqs:
     image: s12v/elasticmq
     ports:
@@ -30,13 +35,17 @@ services:
       - SQS_ENDPOINT=http://localhost:9324
     ports:
       - "3000:3000"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 10s
+      retries: 5
     depends_on:
       - postgres
       - sqs
   migrate:
     network_mode: host
     build: .
-    entrypoint: ["sh", "docker-test-entrypoint.sh"]
+    entrypoint: node_modules/.bin/sequelize db:migrate --config src/database/config.js --migrations-path src/database/migrations/
     environment:
       - NODE_ENV=test
     volumes:
