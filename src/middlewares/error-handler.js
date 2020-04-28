@@ -12,9 +12,7 @@ module.exports = (err, req, res, next) => {
     return new InternalServerError();
   };
 
-  console.error(err.stack);
-
   const normalizedError = normalizeError(err);
 
-  return buildFailureResponse(req, res, normalizedError);
+  return buildFailureResponse(req, res, normalizedError, err);
 };
