@@ -9,6 +9,7 @@ const payableQueue = (initializeSQS) => {
         const params = {
             MessageBody: JSON.stringify(payable),
             QueueUrl: queueUrl,
+            MessageGroupId: `payable_${payable.id}`,
           };
         const response = await queue.sendMessage(params).promise();
         console.log(`Payable ${payable.id} successfully enqueued within message ${response.MessageId}`);

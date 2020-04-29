@@ -1,13 +1,20 @@
 const app = require("../server/app");
 const database = require("../database");
+const logger = require('../lib/logger');
 
 const { ensureDatabaseIsConnected } = require("../lib/database");
 const { setupGracefulShutdown } = require("../server/shutdown");
 
-const { PORT = 3000 } = process.env;
 
-const onListening = () =>
-  console.log(`Server is running on http://localhost:${PORT}`);
+const { PORT = 3000, NODE_ENV } = process.env;
+
+const onListening = () => (
+  logger.info({
+    status: `Running`,
+    address: `http://localhost:${PORT}`,
+    env: NODE_ENV,
+  })
+);
 
 const startServer = app => app.listen(PORT, onListening);
 
