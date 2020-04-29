@@ -26,7 +26,7 @@ services:
   psp:
     network_mode: host
     build: .
-    entrypoint: node src/bin/server.js
+    entrypoint: ["sh", "scripts/start.sh"]
     volumes:
       - .:/psp
       - /psp/node_modules

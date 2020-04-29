@@ -1,15 +1,18 @@
-.PHONY: default all dev test clean database
+.PHONY: default all dev build test clean database
 
 default: all
 
 dev:
 	npm run dev
 
+build:
+	@docker-compose build --no-cache
+
 all:
-	sudo docker-compose up --build psp
+	@docker-compose up psp
 
 infra:
-	sudo docker-compose up -d postgres sqs
+	@docker-compose up -d postgres sqs
 
 clean:
-	sudo docker-compose down --rmi all
+	@docker-compose down --rmi all
