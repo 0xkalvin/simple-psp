@@ -47,7 +47,8 @@ const attributes = {
 const options = {
   indexes: [
     { fields: ["status"] }, 
-    { fields: ["transaction_id"] }
+    { fields: ["transaction_id"] },
+    { fields: ["payment_date"] },
   ],
   timestamps: true,
   freezeTableName: true,
