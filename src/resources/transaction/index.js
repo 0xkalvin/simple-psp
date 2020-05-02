@@ -28,7 +28,19 @@ const index = async (req, res, next) => {
         return next(err);
     }
 }
+
+const show = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const transaction = await service.showTransaction(id);
+        return buildSuccessResponse(res, 200, transaction);
+    } catch (err) {
+        return next(err);
+    }
+}
+
 module.exports = {
     create,
     index,
+    show,
 }
