@@ -3,8 +3,8 @@ const { buildSuccessResponse } = require('../../lib/http/response');
 
 const index = async (req, res, next) => {
     try {
-        const { page, count } = req.query; 
-        const payables = await service.getAllPayables(page, count);
+        const { page, limit } = req.query; 
+        const payables = await service.getAllPayables(page, limit);
         return buildSuccessResponse(res, 200, payables);
 
     } catch (err) {

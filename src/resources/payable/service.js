@@ -44,8 +44,14 @@ const createPayable = async transactionPayload => {
 
 }
 
-const getAllPayables = async (page = 1, count = 10) => {
-    return await Payable.findAll();
+const getAllPayables = async (page = 0, limit = 100) => {
+    return await Payable.findAll({
+        offset: page * limit,
+        limit,
+        order: [
+            ['createdAt', 'DESC']
+        ]
+    });
 }
 
 module.exports = {
