@@ -1,3 +1,5 @@
+const { DataTypes } = require('sequelize');
+
 const create = (connection, dataTypes) => {
   return connection.define(
     "Transaction",
@@ -61,8 +63,19 @@ const create = (connection, dataTypes) => {
   );
 };
 
-const associate = () => {};
+const associate = (instance, models) => {
+  
+  const { Payable } = models;
+  
+  return instance.hasMany(Payable, { foreignKey: {
+    type: DataTypes.UUID,
+    allowNull: false,
+    field: 'transaction_id',
+    name: 'transactionId',
+  }});
+};
 
 module.exports = {
   create,
+  associate,
 };

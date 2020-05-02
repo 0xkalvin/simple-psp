@@ -12,12 +12,6 @@ module.exports = {
       transaction_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: {
-          model: 'transactions',
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
       },
       status: {
         type: Sequelize.ENUM,

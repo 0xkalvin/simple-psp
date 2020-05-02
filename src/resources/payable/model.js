@@ -8,11 +8,6 @@ const attributes = {
     allowNull: false,
     primaryKey: true,
   },
-  transactionId: {
-    type: DataTypes.UUID,
-    allowNull: false,
-    field: "transaction_id",
-  },
   status: {
     type: DataTypes.ENUM,
     allowNull: false,
@@ -59,6 +54,21 @@ const options = {
 const create = connection => connection.define("Payable", attributes, options);
 
 
+const associate = (instance, models) => {
+  
+  const { Transaction } = models;
+  
+  return instance.belongsTo(Transaction, { 
+    foreignKey: { 
+      type: DataTypes.UUID,
+      allowNull: false,
+      field: 'transaction_id',
+      name: 'transactionId',
+    }
+  });
+};
+
 module.exports = {
   create,
+  associate,
 };
