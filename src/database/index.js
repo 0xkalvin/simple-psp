@@ -8,7 +8,7 @@ const connection = new Sequelize(config[env]);
 
 const initDatabase = () => {
   const initModels = (model) => ({
-    instance: model.create(connection, Sequelize),
+    instance: model.create(connection),
     model,
   });
 
