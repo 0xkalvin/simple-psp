@@ -4,13 +4,13 @@ const payableQueue = require('../payable/queue');
 const { Transaction, Payable } = database.models;
 
 const createTransaction = payload => {
-  const addCreditCardLastFourNumbers = payload => ({
+  const addCardLastFourNumbers = payload => ({
     ...payload,
     cardLastFourNumbers: payload.cardNumber.substr(-4),
   });
 
   return Promise.resolve(payload)
-    .then(addCreditCardLastFourNumbers)
+    .then(addCardLastFourNumbers)
     .then((transactionPayload) =>
       database.transaction(async (t) => {
         const createdTransaction = await Transaction.create(
