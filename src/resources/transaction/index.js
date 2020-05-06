@@ -23,7 +23,8 @@ const create = async (req, res, next) => {
 
 const index = async (req, res, next) => {
     try {
-        return buildSuccessResponse(res, 200, []);
+        const transactions = await service.getAllTransactions();
+        return buildSuccessResponse(res, 200, transactions);
     } catch (err) {
         return next(err);
     }

@@ -1,5 +1,4 @@
 const { DataTypes } = require("sequelize");
-const payableQueue = require('../payable/queue');
 
 const attributes = {
   id: {
@@ -54,61 +53,10 @@ const attributes = {
   },
 };
 
-const hooks = {
-  afterCreate: async (transactionInstance) => {
-    const payablesRules = {
-      credit: {
-        status: "waiting_funds",
-        fee: 5,
-        daysUntilPayment: 30,
-      },
-      debit: {
-        status: "paid",
-        fee: 3,
-        daysUntilPayment: 0,
-      },
-    };
-    const { Payable } = transactionInstance.sequelize.models;
-
-    const discountFee = (amount, fee) => ((100 - fee) * amount) / 100;
-
-    const setPaymentDate = (transactionDate, daysUntilPayment) => {
-      const createdAtAsDate = new Date(transactionDate);
-      return createdAtAsDate.setDate(
-        createdAtAsDate.getDate() + daysUntilPayment
-      );
-    };
-
-    const isCredit = transactionInstance.paymentMethod === "credit_card";
-
-    const { status, fee, daysUntilPayment } = isCredit
-      ? payablesRules.credit
-      : payablesRules.debit;
-
-    const payablePayload = {
-      fee,
-      status,
-      transactionId: transactionInstance.id,
-      receivableAmount: discountFee(transactionInstance.amount, fee),
-      paymentDate: setPaymentDate(
-        transactionInstance.createdAt,
-        daysUntilPayment
-      ),
-    };
-
-    const payable = await Payable.create(payablePayload);
-
-    payableQueue.push(payable);
-
-    return payable;
-  },
-};
-
 const options = {
   timestamps: true,
   freezeTableName: true,
   tableName: "transactions",
-  hooks,
 };
 
 const create = (connection) =>

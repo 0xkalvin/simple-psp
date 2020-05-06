@@ -1,15 +1,32 @@
 const database = require("../../database");
+const payableService = require("../payable/service");
+const payableQueue = require('../payable/queue');
 const { Transaction, Payable } = database.models;
 
-const createTransaction = async (transactionPayload) => {
-  const getLastFourNumbers = (cardNumber) => cardNumber.substr(-4);
-
-  const transaction = await Transaction.create({
-    ...transactionPayload,
-    cardLastFourNumbers: getLastFourNumbers(transactionPayload.cardNumber),
+const createTransaction = payload => {
+  const addCreditCardLastFourNumbers = payload => ({
+    ...payload,
+    cardLastFourNumbers: payload.cardNumber.substr(-4),
   });
 
-  return transaction;
+  return Promise.resolve(payload)
+    .then(addCreditCardLastFourNumbers)
+    .then((transactionPayload) =>
+      database.transaction(async (t) => {
+        const createdTransaction = await Transaction.create(
+          transactionPayload,
+          { transaction: t }
+        );
+
+        const payablePayload = payableService.buildPayable(createdTransaction);
+
+        const createdPayable = await Payable.create(payablePayload, { transaction: t });
+        
+        payableQueue.push(createdPayable);
+        
+        return createdTransaction;
+      })
+    );
 };
 
 const showTransaction = async (transactionId) => {
@@ -21,7 +38,7 @@ const showTransaction = async (transactionId) => {
       {
         model: Payable,
         as: "payables",
-        attributes: [ 'id', 'status', 'paymentDate', 'fee', 'receivableAmount']
+        attributes: ["id", "status", "paymentDate", "fee", "receivableAmount"],
       },
     ],
   });
@@ -29,7 +46,12 @@ const showTransaction = async (transactionId) => {
   return transaction;
 };
 
+const getAllTransactions = async () => {
+  return await Transaction.findAll();
+};
+
 module.exports = {
   createTransaction,
   showTransaction,
+  getAllTransactions,
 };
