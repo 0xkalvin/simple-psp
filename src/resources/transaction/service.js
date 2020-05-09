@@ -3,30 +3,28 @@ const payableService = require("../payable/service");
 const payableQueue = require('../payable/queue');
 const { Transaction, Payable } = database.models;
 
-const createTransaction = payload => {
+const createTransaction = async payload => {
   const addCardLastFourNumbers = payload => ({
     ...payload,
     cardLastFourNumbers: payload.cardNumber.substr(-4),
   });
 
-  return Promise.resolve(payload)
-    .then(addCardLastFourNumbers)
-    .then((transactionPayload) =>
-      database.transaction(async (t) => {
-        const createdTransaction = await Transaction.create(
-          transactionPayload,
-          { transaction: t }
-        );
+  const transactionPayload = addCardLastFourNumbers(payload);
 
-        const payablePayload = payableService.buildPayable(createdTransaction);
-
-        const createdPayable = await Payable.create(payablePayload, { transaction: t });
-        
-        payableQueue.push(createdPayable);
-        
-        return createdTransaction;
-      })
+  return await database.transaction(async t => {
+    const createdTransaction = await Transaction.create(
+      transactionPayload,
+      { transaction: t }
     );
+
+    const payablePayload = payableService.buildPayable(createdTransaction);
+
+    const createdPayable = await Payable.create(payablePayload, { transaction: t });
+    
+    payableQueue.push(createdPayable);
+    
+    return createdTransaction;
+  })
 };
 
 const showTransaction = async (transactionId) => {
