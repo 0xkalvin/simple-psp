@@ -7,10 +7,10 @@ const NotFoundError = require('./not-found');
 
 
 module.exports = {
-    BaseError,
-    BadRequestError,
-    InternalServerError,
-    UnprocessableEntityError,
-    notAllowedError,
-    NotFoundError,
-}
+  BaseError,
+  BadRequestError,
+  InternalServerError,
+  UnprocessableEntityError,
+  notAllowedError,
+  NotFoundError,
+};

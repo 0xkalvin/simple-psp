@@ -9,7 +9,7 @@ const setupGracefulShutdown = (process, server, database) => {
     });
   };
 
-  const signals = ["SIGHUP", "SIGINT", "SIGTERM", "SIGUSR2"];
+  const signals = ['SIGHUP', 'SIGINT', 'SIGTERM', 'SIGUSR2'];
 
   signals.forEach((signal) => {
     process.on(signal, shutdown);

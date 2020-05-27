@@ -1,20 +1,18 @@
 const test = require('ava');
 const request = require('supertest');
 
-test.beforeEach(async t => {
+test.beforeEach(async (t) => {
+  const app = require('../../src/server/app');
 
-    const app = require('../../src/server/app');
+  t.context.app = app;
+});
 
-    t.context.app = app
-})
+test('should return 200 from health endpoint', async (t) => {
+  const {app} = t.context;
 
-test('should return 200 from health endpoint', async t => {
+  const res = await request(app)
+      .get('/health')
+      .send();
 
-    const { app } = t.context
-
-    const res = await request(app)
-        .get('/health')
-        .send()
-
-    t.is(res.status, 200)
-})
+  t.is(res.status, 200);
+});

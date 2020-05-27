@@ -3,40 +3,40 @@ const Joi = require('@hapi/joi').extend(JoiDate);
 
 const createSchema = Joi.object({
   description: Joi
-    .string()
-    .allow('')
-    .required(),
+      .string()
+      .allow('')
+      .required(),
 
   amount: Joi
-    .number()
-    .positive()
-    .required(),
+      .number()
+      .positive()
+      .required(),
 
   paymentMethod: Joi
-    .valid('credit_card', 'debit_card')
-    .required(),
+      .valid('credit_card', 'debit_card')
+      .required(),
 
   cardNumber: Joi
-    .string()
-    .creditCard()
-    .required(),
+      .string()
+      .creditCard()
+      .required(),
 
   cardHolderName: Joi
-    .string()
-    .required(),
+      .string()
+      .required(),
 
   cardExpirationDate: Joi
-    .date()
-    .format('MM/YY')
-    .required(),
+      .date()
+      .format('MM/YY')
+      .required(),
 
   cardVerificationCode: Joi
-    .string()
-    .length(3)
-    .required(),
-})
+      .string()
+      .length(3)
+      .required(),
+});
 
 
 module.exports = {
   createSchema,
-}
+};

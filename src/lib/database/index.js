@@ -5,13 +5,13 @@ const ensureDatabaseIsConnected = (db) => {
   const RETRY_TIMEOUT = 1000;
 
   const tryToConnect = (retry = 1) => db.authenticate()
-    .catch((err) => {
-      if (retry <= MAX_RETRIES) {
-        return Promise.delay(RETRY_TIMEOUT)
-          .then(() => tryToConnect(retry + 1));
-      }
-      return Promise.reject(err);
-    });
+      .catch((err) => {
+        if (retry <= MAX_RETRIES) {
+          return Promise.delay(RETRY_TIMEOUT)
+              .then(() => tryToConnect(retry + 1));
+        }
+        return Promise.reject(err);
+      });
 
   return tryToConnect();
 };

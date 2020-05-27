@@ -1,8 +1,8 @@
-const { SQS, Credentials } = require("aws-sdk");
-const config = require("./config");
+const {SQS, Credentials} = require('aws-sdk');
+const config = require('./config');
 
 const initializeSQS = () => {
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.NODE_ENV === 'production') {
     return {
       sqs: new SQS({
         endpoint: config.endpoint,
@@ -17,12 +17,12 @@ const initializeSQS = () => {
       endpoint: config.endpoint,
       region: config.region,
       credentials: new Credentials({
-        accessKeyId: "x",
-        secretAccessKey: "x",
+        accessKeyId: 'x',
+        secretAccessKey: 'x',
       }),
     }),
-    config
+    config,
   };
-}
+};
 
 module.exports = initializeSQS;

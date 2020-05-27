@@ -1,5 +1,5 @@
 
-const { DataTypes } = require('sequelize');
+const {DataTypes} = require('sequelize');
 
 const attributes = {
   id: {
@@ -11,12 +11,12 @@ const attributes = {
   status: {
     type: DataTypes.ENUM,
     allowNull: false,
-    values: ["paid", "waiting_funds"],
+    values: ['paid', 'waiting_funds'],
   },
   paymentDate: {
     type: DataTypes.DATE,
     allowNull: false,
-    field: "payment_date",
+    field: 'payment_date',
   },
   fee: {
     type: DataTypes.DOUBLE,
@@ -25,46 +25,45 @@ const attributes = {
   receivableAmount: {
     type: DataTypes.DOUBLE,
     allowNull: false,
-    field: "receivable_amount",
+    field: 'receivable_amount',
   },
   createdAt: {
     type: DataTypes.DATE,
     allowNull: false,
-    field: "created_at",
+    field: 'created_at',
   },
   updatedAt: {
     type: DataTypes.DATE,
     allowNull: false,
-    field: "updated_at",
+    field: 'updated_at',
   },
 };
 
 const options = {
   indexes: [
-    { fields: ["status"] }, 
-    { fields: ["transaction_id"] },
-    { fields: ["payment_date"] },
+    {fields: ['status']},
+    {fields: ['transaction_id']},
+    {fields: ['payment_date']},
   ],
   timestamps: true,
   freezeTableName: true,
-  tableName: "payables",
+  tableName: 'payables',
 };
 
 
-const create = connection => connection.define("Payable", attributes, options);
+const create = (connection) => connection.define('Payable', attributes, options);
 
 
 const associate = (instance, models) => {
-  
-  const { Transaction } = models;
-  
-  return instance.belongsTo(Transaction, { 
-    foreignKey: { 
+  const {Transaction} = models;
+
+  return instance.belongsTo(Transaction, {
+    foreignKey: {
       type: DataTypes.UUID,
       allowNull: false,
       field: 'transaction_id',
       name: 'transactionId',
-    }
+    },
   });
 };
 

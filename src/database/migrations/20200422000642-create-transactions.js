@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
 module.exports = {
   up: (queryInterface, Sequelize) =>
-    queryInterface.createTable("transactions", {
+    queryInterface.createTable('transactions', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -20,7 +20,7 @@ module.exports = {
       payment_method: {
         type: Sequelize.ENUM,
         allowNull: false,
-        values: ["debit_card", "credit_card"],
+        values: ['debit_card', 'credit_card'],
       },
       card_last_four_numbers: {
         type: Sequelize.STRING(4),
@@ -48,5 +48,5 @@ module.exports = {
       },
     }),
 
-  down: (queryInterface, Sequelize) => queryInterface.dropTable("transactions"),
+  down: (queryInterface, Sequelize) => queryInterface.dropTable('transactions'),
 };

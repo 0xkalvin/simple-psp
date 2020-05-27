@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
 module.exports = {
   up: (queryInterface, Sequelize) =>
-    queryInterface.createTable("payables", {
+    queryInterface.createTable('payables', {
       id: {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
@@ -16,7 +16,7 @@ module.exports = {
       status: {
         type: Sequelize.ENUM,
         allowNull: false,
-        values: ["paid", "waiting_funds"],
+        values: ['paid', 'waiting_funds'],
       },
       payment_date: {
         type: Sequelize.DATE,
@@ -40,5 +40,5 @@ module.exports = {
       },
     }),
 
-  down: (queryInterface, Sequelize) => queryInterface.dropTable("payables"),
+  down: (queryInterface, Sequelize) => queryInterface.dropTable('payables'),
 };

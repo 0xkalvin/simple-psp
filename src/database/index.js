@@ -12,15 +12,15 @@ const initDatabase = () => {
     model,
   });
 
-  const associateModels = ({ instance, model }) => {
+  const associateModels = ({instance, model}) => {
     if (model.associate) {
       model.associate(instance, connection.models);
     }
   };
 
   Object.values(rawModels)
-    .map(initModels)
-    .map(associateModels);
+      .map(initModels)
+      .map(associateModels);
 
   return connection;
 };
