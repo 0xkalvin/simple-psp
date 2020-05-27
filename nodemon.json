@@ -8,5 +8,8 @@
     "src"
     ],
     "exec": "node src/bin/server.js",
-    "ext": "js"
+    "ext": "js",
+    "env": {
+        "NODE_ENV": "development"
+    }
 }
