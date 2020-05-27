@@ -1,11 +1,11 @@
 
 
 class BaseError extends Error {
-    constructor(message, statusCode, type, payload = []){
+    constructor(message, statusCode, type, details = []){
         super(message);
         this.statusCode = statusCode;
         this.type = type;
-        this.payload = payload;
+        this.details = details;
     }
 }
 

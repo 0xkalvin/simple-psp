@@ -6,7 +6,7 @@ class UnprocessableEntityError extends BaseError {
         super('Invalid request body');
         this.statusCode = 422;
         this.type = 'invalid_request_body';
-        this.payload = this.normalizePayload(payload);
+        this.details = this.normalizePayload(payload);
     }
 
     normalizePayload(payload){
