@@ -1,4 +1,4 @@
-.PHONY: default all dev build test clean database
+.PHONY: default all dev build test down database
 
 default: all
 
@@ -14,5 +14,5 @@ all:
 infra:
 	@docker-compose up -d postgres sqs
 
-clean:
-	@docker-compose down --rmi all
+down:
+	@docker-compose down --rmi all --remove-orphans
