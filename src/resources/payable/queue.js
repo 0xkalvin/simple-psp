@@ -1,4 +1,5 @@
 const initializeSQS = require('../../queue');
+const logger = require('../../lib/logger');
 
 const payableQueue = (initializeSQS) => {
   const { sqs: queue, config: { endpoint } } = initializeSQS();
@@ -10,8 +11,15 @@ const payableQueue = (initializeSQS) => {
       QueueUrl: queueUrl,
       MessageGroupId: `payable_${payable.id}`,
     };
+
     const response = await queue.sendMessage(params).promise();
-    console.log(`Payable ${payable.id} successfully enqueued within message ${response.MessageId}`);
+
+    logger.info({
+      payable_id: payable.id,
+      message_id: response.MessageId,
+      message: 'payable-successfully-enqueued',
+    });
+
     return response;
   };
 

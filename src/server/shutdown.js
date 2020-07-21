@@ -1,6 +1,11 @@
+const logger = require('../lib/logger');
+
 const setupGracefulShutdown = (process, server, database) => {
   const shutdown = (signal) => {
-    console.log(`\nGracefully shutting down with signal ${signal}...`);
+    logger.info({
+      message: 'gracefully-shutting-down',
+      signal,
+    });
 
     server.close(() => {
       database.close().then(() => {
