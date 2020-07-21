@@ -13,29 +13,17 @@ const attributes = {
     allowNull: false,
     values: ['paid', 'waiting_funds'],
   },
-  paymentDate: {
+  payment_date: {
     type: DataTypes.DATE,
     allowNull: false,
-    field: 'payment_date',
   },
   fee: {
     type: DataTypes.DOUBLE,
     allowNull: false,
   },
-  receivableAmount: {
+  receivable_amount: {
     type: DataTypes.DOUBLE,
     allowNull: false,
-    field: 'receivable_amount',
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    field: 'created_at',
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    field: 'updated_at',
   },
 };
 
@@ -45,9 +33,11 @@ const options = {
     {fields: ['transaction_id']},
     {fields: ['payment_date']},
   ],
-  timestamps: true,
-  freezeTableName: true,
   tableName: 'payables',
+  freezeTableName: true,
+  underscored: true,
+  createdAt: 'created_at',
+  updatedAt: 'updated_at',
 };
 
 
@@ -62,7 +52,7 @@ const associate = (instance, models) => {
       type: DataTypes.UUID,
       allowNull: false,
       field: 'transaction_id',
-      name: 'transactionId',
+      name: 'transaction_id',
     },
   });
 };

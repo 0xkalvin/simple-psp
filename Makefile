@@ -16,3 +16,6 @@ infra:
 
 down:
 	@docker-compose down --rmi all --remove-orphans
+
+test:
+	@docker-compose up test

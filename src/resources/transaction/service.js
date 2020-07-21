@@ -6,7 +6,7 @@ const {Transaction, Payable} = database.models;
 const createTransaction = async (payload) => {
   const addCardLastFourNumbers = (payload) => ({
     ...payload,
-    cardLastFourNumbers: payload.cardNumber.substr(-4),
+    card_last_four_numbers: payload.card_number.substr(-4),
   });
 
   const transactionPayload = addCardLastFourNumbers(payload);
@@ -36,7 +36,7 @@ const showTransaction = async (transactionId) => {
       {
         model: Payable,
         as: 'payables',
-        attributes: ['id', 'status', 'paymentDate', 'fee', 'receivableAmount'],
+        attributes: ['id', 'status', 'payment_date', 'fee', 'receivable_amount'],
       },
     ],
   });

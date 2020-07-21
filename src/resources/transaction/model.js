@@ -15,48 +15,36 @@ const attributes = {
     type: DataTypes.TEXT,
     allowNull: true,
   },
-  paymentMethod: {
+  payment_method: {
     type: DataTypes.ENUM,
     allowNull: false,
     values: ['debit_card', 'credit_card'],
-    field: 'payment_method',
   },
-  cardLastFourNumbers: {
+  card_last_four_numbers: {
     type: DataTypes.STRING(4),
     allowNull: false,
-    field: 'card_last_four_numbers',
   },
-  cardHolderName: {
+  card_holder_name: {
     type: DataTypes.TEXT,
     allowNull: false,
-    field: 'card_holder_name',
   },
-  cardExpirationDate: {
+  card_expiration_date: {
     type: DataTypes.DATE,
     allowNull: false,
     field: 'card_expiration_date',
   },
-  cardVerificationCode: {
+  card_verification_code: {
     type: DataTypes.STRING(4),
     allowNull: false,
-    field: 'card_verification_code',
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    field: 'created_at',
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    field: 'updated_at',
   },
 };
 
 const options = {
-  timestamps: true,
-  freezeTableName: true,
   tableName: 'transactions',
+  freezeTableName: true,
+  underscored: true,
+  createdAt: 'created_at',
+  updatedAt: 'updated_at',
 };
 
 const create = (connection) =>
@@ -70,7 +58,7 @@ const associate = (instance, models) => {
       type: DataTypes.UUID,
       allowNull: false,
       field: 'transaction_id',
-      name: 'transactionId',
+      name: 'transaction_id',
     },
     as: 'payables',
   });

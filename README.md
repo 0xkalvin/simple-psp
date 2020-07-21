@@ -40,11 +40,11 @@ This describes the resources that make up the API
 curl -XPOST "http://localhost:3000/transactions" --header "Content-Type: application/json"  --data '{
     "description": "Lightsaber",
     "amount": "2500.00",
-    "paymentMethod": "credit_card",
-    "cardNumber": "4111111111111111",
-    "cardHolderName": "Luke Skywalker",
-    "cardExpirationDate": "10/25",
-    "cardVerificationCode": "123" }'
+    "payment_method": "credit_card",
+    "card_number": "4111111111111111",
+    "card_holder_name": "Luke Skywalker",
+    "card_expiration_date": "10/25",
+    "card_verification_code": "123" }'
 ```
 
 #### Response
@@ -54,13 +54,13 @@ curl -XPOST "http://localhost:3000/transactions" --header "Content-Type: applica
   "id": "24e249f8-ca37-430a-afe9-bf05d9cd5688",
   "description": "Lightsaber",
   "amount": 2500,
-  "paymentMethod": "credit_card",
-  "cardHolderName": "Luke Skywalker",
-  "cardExpirationDate": "2025-10-01T00:00:00.000Z",
-  "cardVerificationCode": "123",
-  "cardLastFourNumbers": "1111",
-  "updatedAt": "2020-07-19T22:26:23.693Z",
-  "createdAt": "2020-07-19T22:26:23.693Z"
+  "payment_method": "credit_card",
+  "card_holder_name": "Luke Skywalker",
+  "card_expiration_date": "2025-10-01T00:00:00.000Z",
+  "card_verification_code": "123",
+  "card_last_fourN_numbers": "1111",
+  "updated_at": "2020-07-19T22:26:23.693Z",
+  "created_at": "2020-07-19T22:26:23.693Z"
 }
 ```
 
@@ -79,12 +79,12 @@ curl http://localhost:3000/payables
   {
     "id": "4833e715-fb9b-4c60-8b8f-5bab65ea11e5",
     "status": "waiting_funds",
-    "paymentDate": "2020-08-18T22:26:23.693Z",
+    "payment_date": "2020-08-18T22:26:23.693Z",
     "fee": 5,
-    "receivableAmount": 2375,
-    "createdAt": "2020-07-19T22:26:23.701Z",
-    "updatedAt": "2020-07-19T22:26:23.701Z",
-    "transactionId": "24e249f8-ca37-430a-afe9-bf05d9cd5688"
+    "receivable_amount": 2375,
+    "created_at": "2020-07-19T22:26:23.701Z",
+    "updated_at": "2020-07-19T22:26:23.701Z",
+    "transaction_id": "24e249f8-ca37-430a-afe9-bf05d9cd5688"
   }
 ]
 ```

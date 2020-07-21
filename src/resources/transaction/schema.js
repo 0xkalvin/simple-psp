@@ -12,25 +12,25 @@ const createSchema = Joi.object({
       .positive()
       .required(),
 
-  paymentMethod: Joi
+  payment_method: Joi
       .valid('credit_card', 'debit_card')
       .required(),
 
-  cardNumber: Joi
+  card_number: Joi
       .string()
       .creditCard()
       .required(),
 
-  cardHolderName: Joi
+  card_holder_name: Joi
       .string()
       .required(),
 
-  cardExpirationDate: Joi
+  card_expiration_date: Joi
       .date()
       .format('MM/YY')
       .required(),
 
-  cardVerificationCode: Joi
+  card_verification_code: Joi
       .string()
       .length(3)
       .required(),
