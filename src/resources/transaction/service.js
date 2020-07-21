@@ -1,6 +1,7 @@
 const database = require('../../database');
 const payableService = require('../payable/service');
 const payableQueue = require('../payable/queue');
+const logger = require('../../lib/logger');
 
 const { Transaction, Payable } = database.models;
 
@@ -12,20 +13,37 @@ const createTransaction = async (payload) => {
 
   const transactionPayload = addCardLastFourNumbers(payload);
 
-  return database.transaction(async (t) => {
-    const createdTransaction = await Transaction.create(
+  const databaseTransaction = await database.transaction();
+
+  try {
+    const transaction = await Transaction.create(
       transactionPayload,
-      { transaction: t },
+      { transaction: databaseTransaction },
     );
 
-    const payablePayload = payableService.buildPayable(createdTransaction);
+    const payablePayload = payableService.buildPayablePayload(transaction);
 
-    const createdPayable = await Payable.create(payablePayload, { transaction: t });
+    await payableQueue.push(payablePayload);
 
-    payableQueue.push(createdPayable);
+    await databaseTransaction.commit();
 
-    return createdTransaction;
-  });
+    logger.info({
+      event: 'transaction-successfully-created',
+      transaction_id: transaction.id,
+    });
+
+    return transaction;
+  } catch (error) {
+    logger.error({
+      event: 'transaction-creation-failed',
+      err_message: error.message,
+      err_stack: error.stack,
+    });
+
+    await databaseTransaction.rollback();
+
+    throw error;
+  }
 };
 
 const showTransaction = async (transactionId) => {

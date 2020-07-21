@@ -12,7 +12,7 @@ const getAllPayables = async (page = 0, limit = 100) => {
   });
 };
 
-const buildPayable = (transactionInstance) => {
+const buildPayablePayload = (transactionInstance) => {
   const payablesRules = {
     credit: {
       status: 'waiting_funds',
@@ -56,6 +56,6 @@ const buildPayable = (transactionInstance) => {
 };
 
 module.exports = {
-  buildPayable,
+  buildPayablePayload,
   getAllPayables,
 };

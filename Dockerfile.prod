@@ -3,7 +3,8 @@ FROM node:12.10-alpine
 WORKDIR /psp
 
 COPY package.json /psp/package.json
-COPY scripts/start.sh /psp
+COPY scripts/start-server.sh /psp
+COPY scripts/start-payable-worker.sh /psp
 
 
 RUN npm i
