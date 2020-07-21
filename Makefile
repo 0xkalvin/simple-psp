@@ -9,7 +9,7 @@ build:
 	@docker-compose build --no-cache
 
 all:
-	@docker-compose up psp
+	@docker-compose up psp payable-worker
 
 infra:
 	@docker-compose up -d postgres sqs

@@ -9,7 +9,7 @@ const { PORT = 3000, NODE_ENV } = process.env;
 
 const onListening = () => (
   logger.info({
-    status: 'Running',
+    status: 'Server is up and kicking',
     address: `http://localhost:${PORT}`,
     env: NODE_ENV,
   })
@@ -18,7 +18,11 @@ const onListening = () => (
 const startServer = (app) => app.listen(PORT, onListening);
 
 const handleInitializationError = (err) => {
-  logger.error(err);
+  logger.error({
+    event: 'initialization-failed',
+    err_message: err.message,
+    err_stack: err.stack,
+  });
 
   process.exit(1);
 };

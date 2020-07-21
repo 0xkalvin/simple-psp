@@ -26,7 +26,7 @@ services:
   psp:
     network_mode: host
     build: .
-    entrypoint: ["sh", "scripts/start.sh"]
+    entrypoint: ["sh", "scripts/start-server.sh"]
     volumes:
       - .:/psp
       - /psp/node_modules
@@ -39,6 +39,19 @@ services:
       test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
       interval: 10s
       retries: 5
+    depends_on:
+      - postgres
+      - sqs
+  payable-worker:
+    network_mode: host
+    build: .
+    entrypoint: ["sh", "scripts/start-payable-worker.sh"]
+    volumes:
+      - .:/psp
+      - /psp/node_modules
+    environment:
+      - NODE_ENV=test
+      - SQS_ENDPOINT=http://localhost:9324
     depends_on:
       - postgres
       - sqs
