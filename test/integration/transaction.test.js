@@ -1,7 +1,7 @@
 const test = require('ava');
 
-const {req, res, next} = require('../helpers/handlers');
-const {create} = require('../../src/resources/transaction');
+const { req, res, next } = require('../helpers/handlers');
+const { create } = require('../../src/resources/transaction');
 
 test('Should create transaction successfully', async (t) => {
   const payload = {
@@ -14,7 +14,7 @@ test('Should create transaction successfully', async (t) => {
     card_verification_code: '343',
   };
 
-  const {statusCode} = await create({...req, body: payload}, res, next);
+  const { statusCode } = await create({ ...req, body: payload }, res, next);
   t.is(statusCode, 201);
 });
 
@@ -29,6 +29,6 @@ test.skip('Should not create transaction due to invalid paymentMethod', async (t
     card_verification_code: '343',
   };
 
-  const response = await create({...req, body: payload}, res, next);
+  const response = await create({ ...req, body: payload }, res, next);
   t.is(response.statusCode, 422);
 });

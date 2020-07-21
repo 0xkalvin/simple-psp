@@ -1,48 +1,43 @@
 /* eslint-disable camelcase */
-const {QueryTypes} = require('sequelize');
+const { QueryTypes } = require('sequelize');
 const database = require('../../database');
-const {Transaction, Payable} = database.models;
+
+const { Transaction, Payable } = database.models;
 
 const buildDashboard = async () => {
-  const countTransactions = async () => {
-    return await Transaction.sequelize.query(
-        'SELECT payment_method, COUNT(*) as quantity, SUM(amount) as amount FROM transactions group by payment_method'
-        , {type: QueryTypes.SELECT});
-  };
+  const countTransactions = () => Transaction.sequelize.query(
+    'SELECT payment_method, COUNT(*) as quantity, SUM(amount) as amount FROM transactions group by payment_method',
+    { type: QueryTypes.SELECT },
+  );
 
-  const countPayables = async () => {
-    return await Payable.sequelize.query(
-        'SELECT status, COUNT(*) as quantity, SUM(receivable_amount) as amount FROM payables group by status'
-        , {type: QueryTypes.SELECT});
-  };
+  const countPayables = () => Payable.sequelize.query(
+    'SELECT status, COUNT(*) as quantity, SUM(receivable_amount) as amount FROM payables group by status',
+    { type: QueryTypes.SELECT },
+  );
 
-  const normalizeTransactionsData = (rawData) => {
-    return rawData.reduce((acc, item) => {
-      const {payment_method, quantity, amount} = item;
-      const {total_quantity, total_amount} = acc;
+  const normalizeTransactionsData = (rawData) => rawData.reduce((acc, item) => {
+    const { payment_method, quantity, amount } = item;
+    const { total_quantity, total_amount } = acc;
 
-      return {
-        ...acc,
-        [payment_method]: {quantity: parseInt(quantity), amount},
-        total_quantity: total_quantity + parseInt(quantity),
-        total_amount: total_amount + amount,
-      };
-    }, {total_quantity: 0, total_amount: 0});
-  };
+    return {
+      ...acc,
+      [payment_method]: { quantity: parseInt(quantity, 10), amount },
+      total_quantity: total_quantity + parseInt(quantity, 10),
+      total_amount: total_amount + amount,
+    };
+  }, { total_quantity: 0, total_amount: 0 });
 
-  const normalizePayablesData = (rawData) => {
-    return rawData.reduce((acc, item) => {
-      const {status, quantity, amount} = item;
-      const {total_quantity, total_amount} = acc;
+  const normalizePayablesData = (rawData) => rawData.reduce((acc, item) => {
+    const { status, quantity, amount } = item;
+    const { total_quantity, total_amount } = acc;
 
-      return {
-        ...acc,
-        [status]: {quantity: parseInt(quantity), amount},
-        total_quantity: total_quantity + parseInt(quantity),
-        total_amount: total_amount + amount,
-      };
-    }, {total_quantity: 0, total_amount: 0});
-  };
+    return {
+      ...acc,
+      [status]: { quantity: parseInt(quantity, 10), amount },
+      total_quantity: total_quantity + parseInt(quantity, 10),
+      total_amount: total_amount + amount,
+    };
+  }, { total_quantity: 0, total_amount: 0 });
 
   const [transactionsRawData, payablesRawData] = await Promise.all([
     countTransactions(),

@@ -1,5 +1,5 @@
 const logger = require('../lib/logger');
-const {buildFailureResponse} = require('../lib/http/response');
+const { buildFailureResponse } = require('../lib/http/response');
 const {
   InternalServerError,
   BadRequestError,
@@ -10,7 +10,7 @@ module.exports = (err, req, res, next) => {
   const normalizeError = (err) => {
     if (err instanceof BaseError) {
       return err;
-    } else if (err.type === 'entity.parse.failed') {
+    } if (err.type === 'entity.parse.failed') {
       return new BadRequestError(err.message);
     }
 

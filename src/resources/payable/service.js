@@ -1,9 +1,9 @@
 const database = require('../../database');
 
 const getAllPayables = async (page = 0, limit = 100) => {
-  const {Payable} = database.models;
+  const { Payable } = database.models;
 
-  return await Payable.findAll({
+  return Payable.findAll({
     offset: page * limit,
     limit,
     order: [
@@ -31,15 +31,15 @@ const buildPayable = (transactionInstance) => {
   const setPaymentDate = (transactionDate, daysUntilPayment) => {
     const createdAtAsDate = new Date(transactionDate);
     return createdAtAsDate.setDate(
-        createdAtAsDate.getDate() + daysUntilPayment,
+      createdAtAsDate.getDate() + daysUntilPayment,
     );
   };
 
   const isCredit = transactionInstance.payment_method === 'credit_card';
 
-  const {status, fee, daysUntilPayment} = isCredit ?
-      payablesRules.credit :
-      payablesRules.debit;
+  const { status, fee, daysUntilPayment } = isCredit
+    ? payablesRules.credit
+    : payablesRules.debit;
 
   const payablePayload = {
     fee,
@@ -47,8 +47,8 @@ const buildPayable = (transactionInstance) => {
     transaction_id: transactionInstance.id,
     receivable_amount: discountFee(transactionInstance.amount, fee),
     payment_date: setPaymentDate(
-        transactionInstance.created_at,
-        daysUntilPayment,
+      transactionInstance.created_at,
+      daysUntilPayment,
     ),
   };
 

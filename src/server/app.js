@@ -7,7 +7,6 @@ const routes = require('./routes');
 const errorHandler = require('../middlewares/error-handler');
 const notFoundHandler = require('../middlewares/not-found');
 
-
 const app = express();
 
 app.use(helmet());

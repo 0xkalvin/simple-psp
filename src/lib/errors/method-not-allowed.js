@@ -1,6 +1,5 @@
 const BaseError = require('./base');
 
-
 class NotAllowedError extends BaseError {
   constructor(message) {
     super(message);
@@ -8,6 +7,5 @@ class NotAllowedError extends BaseError {
     this.type = 'method-not-allowed';
   }
 }
-
 
 module.exports = NotAllowedError;

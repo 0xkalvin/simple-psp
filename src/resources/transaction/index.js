@@ -1,12 +1,11 @@
 const service = require('./service');
-const {createSchema} = require('./schema');
-const {buildSuccessResponse} = require('../../lib/http/response');
-const {UnprocessableEntityError} = require('../../lib/errors');
-
+const { createSchema } = require('./schema');
+const { buildSuccessResponse } = require('../../lib/http/response');
+const { UnprocessableEntityError } = require('../../lib/errors');
 
 const create = async (req, res, next) => {
   try {
-    const {error, value: validPayload} = createSchema.validate(req.body);
+    const { error, value: validPayload } = createSchema.validate(req.body);
 
     if (error) {
       throw new UnprocessableEntityError(error.details);
@@ -31,7 +30,7 @@ const index = async (req, res, next) => {
 
 const show = async (req, res, next) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     const transaction = await service.showTransaction(id);
     return buildSuccessResponse(res, 200, transaction);
   } catch (err) {

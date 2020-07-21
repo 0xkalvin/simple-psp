@@ -1,6 +1,5 @@
 const BaseError = require('./base');
 
-
 class NotFoundError extends BaseError {
   constructor(message) {
     super(message);
@@ -8,6 +7,5 @@ class NotFoundError extends BaseError {
     this.type = 'not-found';
   }
 }
-
 
 module.exports = NotFoundError;

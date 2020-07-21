@@ -1,6 +1,5 @@
 const service = require('./service');
-const {buildSuccessResponse} = require('../../lib/http/response');
-
+const { buildSuccessResponse } = require('../../lib/http/response');
 
 const index = async (req, res, next) => {
   try {
@@ -10,7 +9,6 @@ const index = async (req, res, next) => {
     return next(err);
   }
 };
-
 
 module.exports = {
   index,

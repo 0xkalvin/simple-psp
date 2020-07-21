@@ -8,11 +8,11 @@ test.beforeEach(async (t) => {
 });
 
 test('should return 200 from health endpoint', async (t) => {
-  const {app} = t.context;
+  const { app } = t.context;
 
   const res = await request(app)
-      .get('/health')
-      .send();
+    .get('/health')
+    .send();
 
   t.is(res.status, 200);
 });
