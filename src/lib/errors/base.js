@@ -1,5 +1,3 @@
-
-
 class BaseError extends Error {
   constructor(message, statusCode, type, details = []) {
     super(message);
@@ -8,6 +6,5 @@ class BaseError extends Error {
     this.details = details;
   }
 }
-
 
 module.exports = BaseError;

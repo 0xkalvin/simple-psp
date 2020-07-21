@@ -1,5 +1,4 @@
-
-const {DataTypes} = require('sequelize');
+const { DataTypes } = require('sequelize');
 
 const attributes = {
   id: {
@@ -29,9 +28,9 @@ const attributes = {
 
 const options = {
   indexes: [
-    {fields: ['status']},
-    {fields: ['transaction_id']},
-    {fields: ['payment_date']},
+    { fields: ['status'] },
+    { fields: ['transaction_id'] },
+    { fields: ['payment_date'] },
   ],
   tableName: 'payables',
   freezeTableName: true,
@@ -40,12 +39,10 @@ const options = {
   updatedAt: 'updated_at',
 };
 
-
 const create = (connection) => connection.define('Payable', attributes, options);
 
-
 const associate = (instance, models) => {
-  const {Transaction} = models;
+  const { Transaction } = models;
 
   return instance.belongsTo(Transaction, {
     foreignKey: {

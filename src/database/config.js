@@ -1,4 +1,3 @@
-
 module.exports = {
   development: {
     dialect: 'postgres',

@@ -8,11 +8,11 @@ test.beforeEach(async (t) => {
 });
 
 test('should return 200 from payables endpoint', async (t) => {
-  const {app} = t.context;
+  const { app } = t.context;
 
   const res = await request(app)
-      .get('/payables')
-      .send();
+    .get('/payables')
+    .send();
 
   t.is(res.status, 200);
   t.true(res.body instanceof Array);

@@ -1,7 +1,7 @@
 const initializeSQS = require('../../queue');
 
 const payableQueue = (initializeSQS) => {
-  const {sqs: queue, config: {endpoint}} = initializeSQS();
+  const { sqs: queue, config: { endpoint } } = initializeSQS();
   const queueUrl = `${endpoint}/queue/payables-queue`;
 
   const push = async (payable) => {

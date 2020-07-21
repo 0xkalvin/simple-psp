@@ -1,4 +1,4 @@
-const {DataTypes} = require('sequelize');
+const { DataTypes } = require('sequelize');
 
 const attributes = {
   id: {
@@ -47,11 +47,10 @@ const options = {
   updatedAt: 'updated_at',
 };
 
-const create = (connection) =>
-  connection.define('Transaction', attributes, options);
+const create = (connection) => connection.define('Transaction', attributes, options);
 
 const associate = (instance, models) => {
-  const {Payable} = models;
+  const { Payable } = models;
 
   return instance.hasMany(Payable, {
     foreignKey: {

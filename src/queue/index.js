@@ -1,4 +1,4 @@
-const {SQS, Credentials} = require('aws-sdk');
+const { SQS, Credentials } = require('aws-sdk');
 const config = require('./config');
 
 const initializeSQS = () => {

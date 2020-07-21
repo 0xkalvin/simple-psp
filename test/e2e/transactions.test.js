@@ -8,7 +8,7 @@ test.beforeEach(async (t) => {
 });
 
 test('should create a transaction successfully', async (t) => {
-  const {app} = t.context;
+  const { app } = t.context;
 
   const res = await request(app).post('/transactions').send({
     description: 'Tyrannosaurus Rex',
@@ -24,7 +24,7 @@ test('should create a transaction successfully', async (t) => {
 });
 
 test('should not process transaction due to missing cardHolderName', async (t) => {
-  const {app} = t.context;
+  const { app } = t.context;
 
   const res = await request(app).post('/transactions').send({
     description: 'Tyrannosaurus Rex',
@@ -39,7 +39,7 @@ test('should not process transaction due to missing cardHolderName', async (t) =
 });
 
 test('should not process transaction due to negative amount', async (t) => {
-  const {app} = t.context;
+  const { app } = t.context;
 
   const res = await request(app).post('/transactions').send({
     description: 'Tyrannosaurus Rex',

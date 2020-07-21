@@ -8,12 +8,11 @@ const req = {
 
 const res = {
   status: (code) => ({
-    send: (data) => ({body: data, statusCode: code}),
+    send: (data) => ({ body: data, statusCode: code }),
   }),
 };
 
 const next = () => () => {};
-
 
 module.exports = {
   req,

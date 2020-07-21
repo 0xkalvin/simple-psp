@@ -1,6 +1,5 @@
 const BaseError = require('./base');
 
-
 class UnprocessableEntityError extends BaseError {
   constructor(payload = []) {
     super('Invalid request body');
@@ -10,9 +9,8 @@ class UnprocessableEntityError extends BaseError {
   }
 
   normalizePayload(payload) {
-    return payload.map(({message, context}) => ({message, context}));
+    return payload.map(({ message, context }) => ({ message, context }));
   }
 }
-
 
 module.exports = UnprocessableEntityError;
