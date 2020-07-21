@@ -12,12 +12,12 @@ test('should create a transaction successfully', async (t) => {
 
   const res = await request(app).post('/transactions').send({
     description: 'Tyrannosaurus Rex',
-    paymentMethod: 'credit_card',
+    payment_method: 'credit_card',
     amount: 10000000000,
-    cardNumber: '5219981851495587',
-    cardHolderName: 'Elon Musk',
-    cardExpirationDate: '10/10',
-    cardVerificationCode: '343',
+    card_number: '5219981851495587',
+    card_holder_name: 'Elon Musk',
+    card_expiration_date: '10/10',
+    card_verification_code: '343',
   });
 
   t.is(res.status, 201);
@@ -28,11 +28,11 @@ test('should not process transaction due to missing cardHolderName', async (t) =
 
   const res = await request(app).post('/transactions').send({
     description: 'Tyrannosaurus Rex',
-    paymentMethod: 'credit_card',
+    payment_method: 'credit_card',
     amount: 10000000000,
-    cardNumber: '5219981851495587',
-    cardExpirationDate: '10/10',
-    cardVerificationCode: '343',
+    card_number: '5219981851495587',
+    card_expiration_date: '10/10',
+    card_verification_code: '343',
   });
 
   t.is(res.status, 422);
@@ -43,12 +43,12 @@ test('should not process transaction due to negative amount', async (t) => {
 
   const res = await request(app).post('/transactions').send({
     description: 'Tyrannosaurus Rex',
-    paymentMethod: 'credit_card',
+    payment_method: 'credit_card',
     amount: -10000000000,
-    cardNumber: '5219981851495587',
-    cardHolderName: 'Elon Musk',
-    cardExpirationDate: '10/10',
-    cardVerificationCode: '343',
+    card_number: '5219981851495587',
+    card_holder_name: 'Elon Musk',
+    card_expiration_date: '10/10',
+    card_verification_code: '343',
   });
 
   t.is(res.status, 422);

@@ -7,7 +7,7 @@ const getAllPayables = async (page = 0, limit = 100) => {
     offset: page * limit,
     limit,
     order: [
-      ['createdAt', 'DESC'],
+      ['created_at', 'DESC'],
     ],
   });
 };
@@ -35,7 +35,7 @@ const buildPayable = (transactionInstance) => {
     );
   };
 
-  const isCredit = transactionInstance.paymentMethod === 'credit_card';
+  const isCredit = transactionInstance.payment_method === 'credit_card';
 
   const {status, fee, daysUntilPayment} = isCredit ?
       payablesRules.credit :
@@ -44,10 +44,10 @@ const buildPayable = (transactionInstance) => {
   const payablePayload = {
     fee,
     status,
-    transactionId: transactionInstance.id,
-    receivableAmount: discountFee(transactionInstance.amount, fee),
-    paymentDate: setPaymentDate(
-        transactionInstance.createdAt,
+    transaction_id: transactionInstance.id,
+    receivable_amount: discountFee(transactionInstance.amount, fee),
+    payment_date: setPaymentDate(
+        transactionInstance.created_at,
         daysUntilPayment,
     ),
   };
