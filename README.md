@@ -1,6 +1,6 @@
 # Simple PSP
 
-A dead simple Payment Service Provider API to illustrate how transactions are processed and how money becomes available to the merchants.
+A dead simple event-driven Payment Service Provider API to illustrate how transactions are processed and how money becomes available to the merchants.
 
 ## Stack
 
