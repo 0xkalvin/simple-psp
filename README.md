@@ -2,6 +2,10 @@
 
 A dead simple event-driven Payment Service Provider API to illustrate how transactions are processed and how money becomes available to the merchants.
 
+<p align="center">
+<img src="./docs/images/infra.png" alt="drawing" width="800" height="400"/>
+</p>
+
 ## Stack
 
 Here's a list of the tech stack used to build this project
