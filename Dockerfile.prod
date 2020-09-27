@@ -1,15 +1,20 @@
-FROM node:12.10-alpine
+FROM node:12.10-alpine as builder
 
 WORKDIR /psp
 
-COPY package.json /psp/package.json
-COPY scripts/start-server.sh /psp
-COPY scripts/start-payable-worker.sh /psp
+COPY package.json .
 
+RUN npm install --production
 
-RUN npm i
+FROM node:12.10-alpine as production
 
-COPY . .
+WORKDIR /psp
+
+COPY /src /psp/src
+COPY /scripts /psp/scripts
+
+COPY --from=builder /psp/node_modules /psp/node_modules
 
 EXPOSE 3000
-ENTRYPOINT ["sh", "-c", "/app/start.sh"]
+
+ENTRYPOINT [ "sh", "/psp/scripts/start.sh" ]
