@@ -2,16 +2,11 @@ version: "3.4"
 
 services:
   postgres:
-    network_mode: host
-    image: postgres
-    volumes:
-      - $HOME/docker/volumes/postgres:/var/lib/postgresql/data
+    image: postgres:11.7-alpine
+    environment:
+      - POSTGRES_PASSWORD=postgres
     ports:
       - "5432:5432"
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_PASSWORD=postgres
-      - PGDATA=/tmp
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -22,17 +17,23 @@ services:
     ports:
       - "9324:9324"
     volumes:
-      - ./infrastructure/sqs.conf:/etc/elasticmq/elasticmq.conf
+      - ./src/queue/local-sqs-setup.conf:/etc/elasticmq/elasticmq.conf
   psp:
-    network_mode: host
-    build: .
-    entrypoint: ["sh", "scripts/start-server.sh"]
+    build:
+      context: .
+    entrypoint: ["sh", "scripts/start.sh"]
     volumes:
       - .:/psp
       - /psp/node_modules
     environment:
       - NODE_ENV=test
-      - SQS_ENDPOINT=http://localhost:9324
+      - APP_TYPE=server
+      - SQS_ENDPOINT=http://sqs:9324
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=postgres
     ports:
       - "3000:3000"
     healthcheck:
@@ -43,35 +44,52 @@ services:
       - postgres
       - sqs
   payable-worker:
-    network_mode: host
-    build: .
-    entrypoint: ["sh", "scripts/start-payable-worker.sh"]
+    build:
+      context: .
+    entrypoint: ["sh", "scripts/start.sh"]
     volumes:
       - .:/psp
       - /psp/node_modules
     environment:
       - NODE_ENV=test
-      - SQS_ENDPOINT=http://localhost:9324
+      - SQS_ENDPOINT=http://sqs:9324
+      - APP_TYPE=worker
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=postgres
     depends_on:
       - postgres
       - sqs
   migrate:
-    network_mode: host
-    build: .
+    build: 
+      context: .
     entrypoint: node_modules/.bin/sequelize db:migrate --config src/database/config.js --migrations-path src/database/migrations/
     environment:
       - NODE_ENV=test
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=postgres
     volumes:
       - .:/psp
       - /psp/node_modules
     depends_on:
       - postgres
   test:
-    network_mode: host
-    build: .
+    build:
+      context: .
     entrypoint: npm run test
     environment:
       - NODE_ENV=test
+      - SQS_ENDPOINT=http://sqs:9324
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=postgres
     volumes:
       - .:/psp
       - /psp/node_modules
