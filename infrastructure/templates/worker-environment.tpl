@@ -1,0 +1,10 @@
+  {"name": "NODE_ENV", "value": "${NODE_ENV}"},
+  {"name": "APP_TYPE", "value": "${APP_TYPE}"},
+  {"name": "DATABASE_HOST", "value": "${DATABASE_HOST}"},
+  {"name": "DATABASE_PORT", "value": "${DATABASE_PORT}"},
+  {"name": "DATABASE_NAME", "value": "${DATABASE_NAME}"},
+  {"name": "DATABASE_USER", "value": "${DATABASE_USER}"},
+  {"name": "SQS_ENDPOINT", "value": "${SQS_ENDPOINT}"},
+  {"name": "SQS_CONCURRENCY", "value": "${SQS_CONCURRENCY}"},
+  {"name": "SQS_REGION", "value": "${SQS_REGION}"},
+  {"name": "PAYABLES_QUEUE", "value": "${PAYABLES_QUEUE}"}
