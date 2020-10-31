@@ -10,6 +10,7 @@ const run = async () => {
   if (!data) {
     logger.info({
       message: 'No payable to process',
+      event: 'processing_payables_from_queue',
     });
 
     return;
@@ -27,12 +28,14 @@ const run = async () => {
     await databaseTransaction.commit();
 
     logger.info({
-      event: 'payable-successfully-created',
+      message: 'Successfully created payables',
+      event: 'payable_creation',
       payable_id: payable.id,
     });
   } catch (error) {
     logger.error({
-      event: 'payable-creation-failed',
+      message: 'Failed to create payables',
+      event: 'payable_creation',
       err_message: error.message,
       err_stack: error.stack,
     });
@@ -46,7 +49,8 @@ const run = async () => {
 const { NODE_ENV } = process.env;
 
 logger.info({
-  status: 'Payable worker running',
+  message: 'Payables worker running',
+  event: 'payables_worker_startup',
   env: NODE_ENV,
 });
 

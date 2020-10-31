@@ -1,20 +1,25 @@
 const logger = require('../lib/logger');
 
-const setupGracefulShutdown = (process, server, database) => {
+const setupGracefulShutdown = (process) => (server) => {
   const shutdown = (signal) => {
     logger.info({
-      message: 'gracefully-shutting-down',
+      message: 'Server is gracefully shutting down...',
+      event: 'server_shutdown',
       signal,
     });
 
     server.close(() => {
-      database.close().then(() => {
-        process.exit(0);
+      logger.info({
+        message: 'Server has closed. Exiting process...',
+        event: 'server_shutdown',
+        signal,
       });
+
+      process.exit(0);
     });
   };
 
-  const signals = ['SIGHUP', 'SIGINT', 'SIGTERM', 'SIGUSR2'];
+  const signals = ['SIGHUP', 'SIGINT', 'SIGTERM'];
 
   signals.forEach((signal) => {
     process.on(signal, shutdown);

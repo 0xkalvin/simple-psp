@@ -28,14 +28,16 @@ const createTransaction = async (payload) => {
     await databaseTransaction.commit();
 
     logger.info({
-      event: 'transaction-successfully-created',
+      message: 'Successfully created transaction',
+      event: 'transaction_creation',
       transaction_id: transaction.id,
     });
 
     return transaction;
   } catch (error) {
     logger.error({
-      event: 'transaction-creation-failed',
+      message: 'Failed to create transaction',
+      event: 'transaction_creation',
       err_message: error.message,
       err_stack: error.stack,
     });

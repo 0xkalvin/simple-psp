@@ -9,7 +9,8 @@ const { PORT = 3000, NODE_ENV } = process.env;
 
 const onListening = () => (
   logger.info({
-    status: 'Server is up and kicking',
+    message: 'Server is up and kicking',
+    event: 'server_startup',
     address: `http://localhost:${PORT}`,
     env: NODE_ENV,
   })
@@ -19,7 +20,8 @@ const startServer = (app) => app.listen(PORT, onListening);
 
 const handleInitializationError = (err) => {
   logger.error({
-    event: 'initialization-failed',
+    message: 'Server has failed to initialize',
+    event: 'server_startup_failed',
     err_message: err.message,
     err_stack: err.stack,
   });
@@ -30,7 +32,7 @@ const handleInitializationError = (err) => {
 const initPSP = (app, database) => {
   ensureDatabaseIsConnected(database)
     .then(() => startServer(app))
-    .then((server) => setupGracefulShutdown(process, server, database))
+    .then(setupGracefulShutdown(process))
     .catch(handleInitializationError);
 };
 

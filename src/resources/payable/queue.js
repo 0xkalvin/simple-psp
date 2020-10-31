@@ -20,7 +20,8 @@ const payableQueue = (initializeSQS) => {
     const response = await sqs.sendMessage(params).promise();
 
     logger.info({
-      event: 'payable-payload-successfully-enqueued',
+      message: 'Successfully enqueued payable payload',
+      event: 'payable_payload_enqueued',
       message_id: response.MessageId,
     });
 
@@ -45,7 +46,8 @@ const payableQueue = (initializeSQS) => {
 
     if (response.Messages && response.Messages.length > 0) {
       logger.info({
-        event: 'payable-received-from-queue',
+        message: 'Processing payable from queue',
+        event: 'payable_received_from_queue',
         metadata: response,
       });
 
@@ -59,7 +61,8 @@ const payableQueue = (initializeSQS) => {
       await sqs.deleteMessage(deleteParams).promise();
 
       logger.info({
-        event: 'payable-deleted-from-queue',
+        message: 'Successfully deleted payable from queue',
+        event: 'payable_deleted_from_queue',
       });
 
       return response;
