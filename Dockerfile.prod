@@ -11,10 +11,12 @@ FROM node:12.10-alpine as production
 WORKDIR /psp
 
 COPY /src /psp/src
-COPY /scripts /psp/scripts
+COPY package.json .
+COPY .sequelizerc .
+
 
 COPY --from=builder /psp/node_modules /psp/node_modules
 
 EXPOSE 3000
 
-ENTRYPOINT [ "sh", "/psp/scripts/start.sh" ]
+ENTRYPOINT [ "npm", "start" ]

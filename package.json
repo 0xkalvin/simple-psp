@@ -6,14 +6,17 @@
   "author": "kalvin <kalvin.vasconcellos@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint . --ext .js",
-    "lint:fix": "eslint . --ext .js --fix ",
-    "dev": "nodemon",
-    "start": "node src/bin/server.js",
-    "test": "NODE_ENV=test nyc ava --verbose 'test/**/*.test.js'",
     "db:create": "npx sequelize db:create",
     "db:migrate": "npx sequelize db:migrate",
-    "db:migrate:undo:all": "npx sequelize db:migrate:undo:all"
+    "db:migrate:undo:all": "npx sequelize db:migrate:undo:all",
+    "dev": "nodemon",
+    "lint": "eslint . --ext .js",
+    "lint:fix": "eslint . --ext .js --fix ",
+    "prestart:server": "npm run db:migrate",
+    "start:server": "node src/bin/server.js",
+    "start:worker": "node src/bin/payable-worker.js",
+    "start": "if [ $APP_TYPE = \"server\" ]; then npm run start:server; else npm run start:worker; fi",
+    "test": "NODE_ENV=test nyc ava --verbose 'test/**/*.test.js'"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",

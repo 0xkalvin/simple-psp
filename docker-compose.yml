@@ -19,9 +19,10 @@ services:
     volumes:
       - ./src/queue/local-sqs-setup.conf:/etc/elasticmq/elasticmq.conf
   psp:
+    container_name: psp-server
     build:
       context: .
-    entrypoint: ["sh", "scripts/start.sh"]
+    entrypoint: npm start
     volumes:
       - .:/psp
       - /psp/node_modules
@@ -45,9 +46,10 @@ services:
       - postgres
       - sqs
   payable-worker:
+    container_name: psp-payables-worker
     build:
       context: .
-    entrypoint: ["sh", "scripts/start.sh"]
+    entrypoint: npm start
     volumes:
       - .:/psp
       - /psp/node_modules
@@ -67,7 +69,7 @@ services:
   migrate:
     build: 
       context: .
-    entrypoint: node_modules/.bin/sequelize db:migrate --config src/database/config.js --migrations-path src/database/migrations/
+    entrypoint: npm run db:migrate
     environment:
       - NODE_ENV=test
       - DATABASE_HOST=postgres
