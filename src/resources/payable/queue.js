@@ -3,8 +3,12 @@ const initializeSQS = require('../../queue');
 const logger = require('../../lib/logger');
 
 const payableQueue = (initializeSQS) => {
-  const { sqs: queue, config: { endpoint } } = initializeSQS();
-  const queueUrl = `${endpoint}/queue/payables-queue`;
+  const {
+    sqs,
+    config: { endpoint, payablesQueueName },
+  } = initializeSQS();
+
+  const queueUrl = `${endpoint}/${payablesQueueName}`;
 
   const push = async (payablePayload) => {
     const params = {
@@ -13,7 +17,7 @@ const payableQueue = (initializeSQS) => {
       MessageGroupId: cuid(),
     };
 
-    const response = await queue.sendMessage(params).promise();
+    const response = await sqs.sendMessage(params).promise();
 
     logger.info({
       event: 'payable-payload-successfully-enqueued',
@@ -37,7 +41,7 @@ const payableQueue = (initializeSQS) => {
       WaitTimeSeconds: 0,
     };
 
-    const response = await queue.receiveMessage(receiveParams).promise();
+    const response = await sqs.receiveMessage(receiveParams).promise();
 
     if (response.Messages && response.Messages.length > 0) {
       logger.info({
@@ -52,7 +56,7 @@ const payableQueue = (initializeSQS) => {
         ReceiptHandle: receiptHandle,
       };
 
-      await queue.deleteMessage(deleteParams).promise();
+      await sqs.deleteMessage(deleteParams).promise();
 
       logger.info({
         event: 'payable-deleted-from-queue',

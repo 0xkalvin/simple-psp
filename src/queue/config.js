@@ -6,4 +6,5 @@ module.exports = {
     accessKeyId: 'x',
     secretAccessKey: 'x',
   },
+  payablesQueueName: process.env.PAYABLES_QUEUE,
 };
