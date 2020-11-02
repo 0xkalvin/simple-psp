@@ -22,7 +22,7 @@ services:
     container_name: psp-server
     build:
       context: .
-    entrypoint: npm start
+    entrypoint: ./node_modules/.bin/nodemon
     volumes:
       - .:/psp
       - /psp/node_modules
@@ -49,7 +49,7 @@ services:
     container_name: psp-payables-worker
     build:
       context: .
-    entrypoint: npm start
+    entrypoint: ./node_modules/.bin/nodemon
     volumes:
       - .:/psp
       - /psp/node_modules

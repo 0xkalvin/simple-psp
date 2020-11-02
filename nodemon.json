@@ -7,7 +7,7 @@
     "watch": [
     "src"
     ],
-    "exec": "node src/bin/server.js",
+    "exec": "if [ $APP_TYPE = \"server\" ]; then node src/bin/server.js; else node src/bin/payable-worker.js; fi",
     "ext": "js",
     "env": {
         "NODE_ENV": "development"
