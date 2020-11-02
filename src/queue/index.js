@@ -8,7 +8,7 @@ const initializeSQS = () => {
         endpoint: config.endpoint,
         region: config.region,
       }),
-      config,
+      ...config,
     };
   }
 
@@ -21,8 +21,8 @@ const initializeSQS = () => {
         secretAccessKey: 'x',
       }),
     }),
-    config,
+    ...config,
   };
 };
 
-module.exports = initializeSQS;
+module.exports = initializeSQS();

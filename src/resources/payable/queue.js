@@ -1,22 +1,22 @@
 const {
+  path,
   pathOr,
   pipe,
 } = require('ramda');
 const cuid = require('cuid');
-const initializeSQS = require('../../queue');
+const queuesConfig = require('../../queue');
 const logger = require('../../lib/logger');
 
 const {
-  SQS_CONCURRECY,
-} = process.env;
+  sqs,
+  endpoint,
+} = queuesConfig;
 
-const payableQueue = (initializeSQS) => {
-  const {
-    sqs,
-    config: { endpoint, payablesQueueName },
-  } = initializeSQS();
+const payablesQueueConfig = path(['payables-queue'], queuesConfig);
 
-  const queueUrl = `${endpoint}/${payablesQueueName}`;
+const payableQueue = () => {
+  const queueUrl = `${endpoint}/${payablesQueueConfig.name}`;
+  const queueConcurrency = payablesQueueConfig.concurrency;
 
   const push = async (payablePayload) => {
     const params = {
@@ -42,7 +42,7 @@ const payableQueue = (initializeSQS) => {
         AttributeNames: [
           'SentTimestamp',
         ],
-        MaxNumberOfMessages: parseInt(SQS_CONCURRECY, 10),
+        MaxNumberOfMessages: parseInt(queueConcurrency, 10),
         MessageAttributeNames: [
           'All',
         ],
@@ -104,4 +104,4 @@ const payableQueue = (initializeSQS) => {
   };
 };
 
-module.exports = payableQueue(initializeSQS);
+module.exports = payableQueue();
