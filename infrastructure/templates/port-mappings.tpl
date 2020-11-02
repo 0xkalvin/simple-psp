@@ -1,0 +1,1 @@
+{"containerPort": ${containerPort}, "protocol": "${protocol}"}
