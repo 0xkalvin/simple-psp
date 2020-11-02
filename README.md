@@ -6,17 +6,20 @@ A dead simple event-driven Payment Service Provider API to illustrate how transa
 <img src="./docs/images/infra.png" alt="drawing" width="800" height="400"/>
 </p>
 
+
 ## Stack
 
-Here's a list of the tech stack used to build this project
+The Simple PSP project API is written in **Node.JS** and its infrastructure is built as code using **Terraform**. Here's a complete list of the tech stack used to build the entire project:
 
-- Postgres
-- AWS SQS
 - Node.JS (Express, Sequelize, AWS SDK, Ava, Supertest )
+- Terraform 
+- AWS (RDS, SQS, ECS Fargate, Parameter Storage, Load Balancer)
 - Docker
 - Docker Compose
+- Postgres
+- Github Actions
 
-## Setup
+## Local setup
 
 Clone the repository:
 
@@ -30,11 +33,11 @@ To start the application just run:
 make
 ```
 
-This will start the underlying infrastructure such as a postgres container and a SQS queue container, as well as the API itself.
+It will initialize the necessary infrastructure (Postgres and SQS containers) and also the PSP API itself.
 
 ## API
 
-This describes the resources that make up the API
+This section describes the resources that make up the API
 
 ### POST /transactions
 
