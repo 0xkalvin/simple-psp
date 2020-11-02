@@ -37,24 +37,7 @@ const createPayable = async (payablePayload) => {
   }
 };
 
-(function run() {
-  const { NODE_ENV } = process.env;
-
-  logger.info({
-    message: 'Payables worker running',
-    event: 'payables_worker_startup',
-    env: NODE_ENV,
-  });
-
-  setInterval(
-    async () => {
-      await payableQueue.process(createPayable);
-    },
-    3000,
-  );
-}());
-
-(function setupGracefulShutdown(process) {
+function setupGracefulShutdown(process, intervalHandle) {
   const shutdown = async (signal) => {
     const wait = () => new Promise((resolve) => setTimeout(() => resolve(), 3000));
 
@@ -63,6 +46,8 @@ const createPayable = async (payablePayload) => {
       event: 'payables_worker_shutdown',
       signal,
     });
+
+    clearInterval(intervalHandle);
 
     await wait();
 
@@ -76,4 +61,23 @@ const createPayable = async (payablePayload) => {
   };
 
   process.on('SIGTERM', shutdown);
-}(process));
+}
+
+(function run() {
+  const { NODE_ENV } = process.env;
+
+  logger.info({
+    message: 'Payables worker running',
+    event: 'payables_worker_startup',
+    env: NODE_ENV,
+  });
+
+  const intervalHandle = setInterval(
+    async () => {
+      await payableQueue.process(createPayable);
+    },
+    3000,
+  );
+
+  setupGracefulShutdown(process, intervalHandle);
+}());
