@@ -46,6 +46,7 @@ services:
     depends_on:
       - postgres
       - sqs
+      - migrate
   payable-worker:
     container_name: psp-payables-worker
     build:
