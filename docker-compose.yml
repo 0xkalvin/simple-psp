@@ -22,7 +22,7 @@ services:
     container_name: psp-server
     build:
       context: .
-    entrypoint: npm start
+    entrypoint: ./node_modules/.bin/nodemon
     volumes:
       - .:/psp
       - /psp/node_modules
@@ -30,6 +30,7 @@ services:
       - NODE_ENV=test
       - APP_TYPE=server
       - SQS_ENDPOINT=http://sqs:9324/queue
+      - SQS_CONCURRECY=10
       - PAYABLES_QUEUE=payables-queue.fifo
       - DATABASE_HOST=postgres
       - DATABASE_PORT=5432
@@ -49,13 +50,14 @@ services:
     container_name: psp-payables-worker
     build:
       context: .
-    entrypoint: npm start
+    entrypoint: ./node_modules/.bin/nodemon
     volumes:
       - .:/psp
       - /psp/node_modules
     environment:
       - NODE_ENV=test
       - SQS_ENDPOINT=http://sqs:9324/queue
+      - SQS_CONCURRECY=10
       - PAYABLES_QUEUE=payables-queue.fifo
       - APP_TYPE=worker
       - DATABASE_HOST=postgres

@@ -1,6 +1,14 @@
+const {
+  pathOr,
+  pipe,
+} = require('ramda');
 const cuid = require('cuid');
 const initializeSQS = require('../../queue');
 const logger = require('../../lib/logger');
+
+const {
+  SQS_CONCURRECY,
+} = process.env;
 
 const payableQueue = (initializeSQS) => {
   const {
@@ -28,52 +36,71 @@ const payableQueue = (initializeSQS) => {
     return response;
   };
 
-  const receiveAndDeleteMessage = async () => {
-    const receiveParams = {
-      AttributeNames: [
-        'SentTimestamp',
-      ],
-      MaxNumberOfMessages: 1,
-      MessageAttributeNames: [
-        'All',
-      ],
-      QueueUrl: queueUrl,
-      VisibilityTimeout: 20,
-      WaitTimeSeconds: 0,
-    };
-
-    const response = await sqs.receiveMessage(receiveParams).promise();
-
-    if (response.Messages && response.Messages.length > 0) {
-      logger.info({
-        message: 'Processing payable from queue',
-        event: 'payable_received_from_queue',
-        metadata: response,
-      });
-
-      const receiptHandle = response.Messages[0].ReceiptHandle;
-
-      const deleteParams = {
+  const process = async (handler) => {
+    const receiveMessages = async () => {
+      const receiveParams = {
+        AttributeNames: [
+          'SentTimestamp',
+        ],
+        MaxNumberOfMessages: parseInt(SQS_CONCURRECY, 10),
+        MessageAttributeNames: [
+          'All',
+        ],
         QueueUrl: queueUrl,
-        ReceiptHandle: receiptHandle,
+        VisibilityTimeout: 20,
+        WaitTimeSeconds: 0,
       };
 
-      await sqs.deleteMessage(deleteParams).promise();
+      const rawMessages = await sqs.receiveMessage(receiveParams).promise();
 
-      logger.info({
-        message: 'Successfully deleted payable from queue',
-        event: 'payable_deleted_from_queue',
+      const messages = pathOr([], ['Messages'], rawMessages);
+
+      return messages;
+    };
+
+    const parseMessage = (rawMessage) => {
+      try {
+        const parsedMessage = JSON.parse(rawMessage.Body);
+
+        return parsedMessage;
+      } catch (error) {
+        return rawMessage.Body;
+      }
+    };
+
+    const processMessage = pipe(
+      parseMessage,
+      handler,
+    );
+
+    const deleteMessage = (message) => {
+      const deleteParams = {
+        QueueUrl: queueUrl,
+        ReceiptHandle: message.ReceiptHandle,
+      };
+
+      return sqs.deleteMessage(deleteParams).promise();
+    };
+
+    try {
+      const messages = await receiveMessages();
+
+      await Promise.all(messages.map(processMessage));
+
+      await Promise.all(messages.map(deleteMessage));
+    } catch (error) {
+      logger.error({
+        message: 'Failed to process messages from SQS queue',
+        event: 'messages_processing',
       });
 
-      return response;
+      throw error;
     }
-
-    return null;
   };
 
   return {
     push,
-    receiveAndDeleteMessage,
+    process,
   };
 };
 
