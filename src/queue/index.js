@@ -1,4 +1,5 @@
 const { SQS, Credentials } = require('aws-sdk');
+const http = require('http');
 const config = require('./config');
 
 const initializeSQS = () => {
@@ -7,6 +8,11 @@ const initializeSQS = () => {
       sqs: new SQS({
         endpoint: config.endpoint,
         region: config.region,
+        httpOptions: {
+          agent: new http.Agent({
+            keepAlive: true,
+          }),
+        },
       }),
       ...config,
     };
