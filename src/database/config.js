@@ -12,6 +12,10 @@ const defaultSettings = {
     underscoredAll: true,
 
   },
+  pool: {
+    max: 50,
+    min: 1,
+  },
 };
 
 module.exports = {
