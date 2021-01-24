@@ -15,6 +15,10 @@ const initializeSQS = () => {
             keepAlive: true,
           }),
         },
+        retryDelayOptions: {
+          base: 200,
+        },
+        maxRetries: 3,
       }),
       ...config,
     };
@@ -33,6 +37,10 @@ const initializeSQS = () => {
           keepAlive: true,
         }),
       },
+      retryDelayOptions: {
+        base: 200,
+      },
+      maxRetries: 3,
     }),
     ...config,
   };
