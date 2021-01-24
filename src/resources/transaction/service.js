@@ -23,9 +23,9 @@ const createTransaction = async (payload) => {
 
     const payablePayload = payableService.buildPayablePayload(transaction);
 
-    await payableQueue.push(payablePayload);
-
     await databaseTransaction.commit();
+
+    payableQueue.push(payablePayload);
 
     logger.info({
       message: 'Successfully created transaction',
