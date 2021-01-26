@@ -13,8 +13,8 @@ const defaultSettings = {
 
   },
   pool: {
-    max: 50,
-    min: 1,
+    max: Number(process.env.DATABASE_MAX_CONNECTIONS) || 50,
+    min: Number(process.env.DATABASE_MIN_CONNECTIONS) || 1,
   },
 };
 

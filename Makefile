@@ -1,4 +1,8 @@
-.PHONY: default all dev build test down database
+.PHONY: default all dev build test down database benchmark
+
+benchmark:
+	@docker-compose -f benchmark.yml up -d postgres sqs psp nginx 
+	@docker-compose -f benchmark.yml up --scale psp=3
 
 default: all
 
@@ -15,7 +19,7 @@ infra:
 	@docker-compose up -d postgres sqs
 
 down:
-	@docker-compose down --rmi all --remove-orphans
+	@docker-compose down --rmi local --remove-orphans
 
 test:
 	@docker-compose up test
