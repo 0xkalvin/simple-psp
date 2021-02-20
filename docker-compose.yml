@@ -3,6 +3,12 @@ version: "3.4"
 services:
   postgres:
     image: postgres:11.7-alpine
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=300"
+      - "-c"
+      - "shared_buffers=500MB"
     environment:
       - POSTGRES_PASSWORD=postgres
     ports:
@@ -37,7 +43,7 @@ services:
       - DATABASE_USER=postgres
       - DATABASE_PASSWORD=postgres
       - DATABASE_NAME=postgres
-      - DATABASE_MAX_CONNECTIONS=90
+      - DATABASE_MAX_CONNECTIONS=280
     ports:
       - "3000:3000"
     healthcheck:
