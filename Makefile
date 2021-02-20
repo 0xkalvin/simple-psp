@@ -15,7 +15,7 @@ infra:
 	@docker-compose up -d postgres sqs
 
 down:
-	@docker-compose down --rmi all --remove-orphans
+	@docker-compose down --rmi local --remove-orphans
 
 test:
 	@docker-compose up test
