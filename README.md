@@ -12,7 +12,7 @@ A dead simple event-driven Payment Service Provider API to illustrate how transa
 The Simple PSP project API is written in **Node.JS** and its infrastructure is built as code using **Terraform**. Here's a complete list of the tech stack used to build the entire project:
 
 - Node.JS (Express, Sequelize, AWS SDK, Ava, Supertest )
-- Terraform 
+- Terraform
 - AWS (RDS, SQS, ECS Fargate, Parameter Storage, Load Balancer)
 - Docker
 - Docker Compose
@@ -55,7 +55,7 @@ curl -XPOST "http://localhost:3000/transactions" --header "Content-Type: applica
 ```
 
 #### Response
-
+201 status code
 ```json
 {
   "id": "24e249f8-ca37-430a-afe9-bf05d9cd5688",
@@ -65,10 +65,37 @@ curl -XPOST "http://localhost:3000/transactions" --header "Content-Type: applica
   "card_holder_name": "Luke Skywalker",
   "card_expiration_date": "2025-10-01T00:00:00.000Z",
   "card_verification_code": "123",
-  "card_last_fourN_numbers": "1111",
+  "card_last_four_numbers": "1111",
   "updated_at": "2020-07-19T22:26:23.693Z",
   "created_at": "2020-07-19T22:26:23.693Z"
 }
+```
+
+### GET /transactions
+
+#### Request
+
+```bash
+curl http://localhost:3000/transactions
+```
+
+#### Response
+200 status code
+```json
+[
+  {
+    "id": "24e249f8-ca37-430a-afe9-bf05d9cd5688",
+    "description": "Lightsaber",
+    "amount": 2500,
+    "payment_method": "credit_card",
+    "card_holder_name": "Luke Skywalker",
+    "card_expiration_date": "2025-10-01T00:00:00.000Z",
+    "card_verification_code": "123",
+    "card_last_four_numbers": "1111",
+    "updated_at": "2020-07-19T22:26:23.693Z",
+    "created_at": "2020-07-19T22:26:23.693Z"
+  }
+]
 ```
 
 ### GET /payables
@@ -80,7 +107,7 @@ curl http://localhost:3000/payables
 ```
 
 #### Response
-
+200 status code
 ```json
 [
   {
@@ -94,29 +121,4 @@ curl http://localhost:3000/payables
     "transaction_id": "24e249f8-ca37-430a-afe9-bf05d9cd5688"
   }
 ]
-```
-
-### GET /dashboard
-
-#### Request
-
-```bash
-curl http://localhost:3000/dashboard
-```
-
-#### Response
-
-```json
-{
-  "transactions": {
-    "total_quantity": 3,
-    "total_amount": 3000,
-    "debit_card": { "quantity": 3, "amount": 3000 }
-  },
-  "payables": {
-    "total_quantity": 3,
-    "total_amount": 2910,
-    "paid": { "quantity": 3, "amount": 2910 }
-  }
-}
 ```

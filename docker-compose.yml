@@ -1,8 +1,9 @@
-version: "3.4"
+version: '2.3'
 
 services:
+  ###### INFRASTRUCTURE ######
   postgres:
-    image: postgres:11.7-alpine
+    image: postgres:14.1-alpine
     command:
       - "postgres"
       - "-c"
@@ -18,96 +19,93 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-  sqs:
-    image: s12v/elasticmq
+
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
     ports:
-      - "9324:9324"
+      - '4566:4566'
+      - '4571:4571'
+    environment:
+      - SERVICES=sqs,iam
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
     volumes:
-      - ./src/queue/local-sqs-setup.conf:/etc/elasticmq/elasticmq.conf
-  psp:
-    container_name: psp-server
+      - '/tmp/localstack'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - ./scripts/localstack:/docker-entrypoint-initaws.d
+    healthcheck:
+      test:
+        - CMD
+        - bash
+        - -c
+        - awslocal sqs list-queues
+      interval: 5s
+      timeout: 10s
+      start_period: 15s
+
+  ###### APPLICATION ######
+  base:
     build:
       context: .
-    entrypoint: ./node_modules/.bin/nodemon
+      args:
+        - NODE_ENV=development
     volumes:
-      - .:/psp
-      - /psp/node_modules
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - .env.example
+
+  rest-server:
+    container_name: rest-server
+    extends: base
+    command: npm run start:rest
     environment:
-      - NODE_ENV=test
+      - APP_NAME=rest_server
       - APP_TYPE=server
-      - SQS_ENDPOINT=http://sqs:9324/queue
-      - SQS_CONCURRECY=10
-      - PAYABLES_QUEUE=payables-queue.fifo
-      - DATABASE_HOST=postgres
-      - DATABASE_PORT=5432
-      - DATABASE_USER=postgres
-      - DATABASE_PASSWORD=postgres
-      - DATABASE_NAME=postgres
-      - DATABASE_MAX_CONNECTIONS=280
     ports:
       - "3000:3000"
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/_liveness_check_"]
       interval: 10s
       retries: 5
     depends_on:
-      - postgres
-      - sqs
-      - migrate
-  payable-worker:
-    container_name: psp-payables-worker
-    build:
-      context: .
-    entrypoint: ./node_modules/.bin/nodemon
-    volumes:
-      - .:/psp
-      - /psp/node_modules
+      postgres:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+      migrate:
+        condition: service_started
+
+  sqs-workers:
+    container_name: sqs-workers
+    extends: base
+    command: npm run start:sqs
     environment:
-      - NODE_ENV=test
-      - SQS_ENDPOINT=http://sqs:9324/queue
-      - SQS_CONCURRECY=10
-      - PAYABLES_QUEUE=payables-queue.fifo
+      - APP_NAME=sqs_workers
       - APP_TYPE=worker
-      - DATABASE_HOST=postgres
-      - DATABASE_PORT=5432
-      - DATABASE_USER=postgres
-      - DATABASE_PASSWORD=postgres
-      - DATABASE_NAME=postgres
-      - DATABASE_MAX_CONNECTIONS=10
     depends_on:
-      - postgres
-      - sqs
+      postgres:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+      migrate:
+        condition: service_started
+
+  ###### ONE-OFF TASKS ######
   migrate:
-    build: 
-      context: .
-    entrypoint: npm run db:migrate
-    environment:
-      - NODE_ENV=test
-      - DATABASE_HOST=postgres
-      - DATABASE_PORT=5432
-      - DATABASE_USER=postgres
-      - DATABASE_PASSWORD=postgres
-      - DATABASE_NAME=postgres
-    volumes:
-      - .:/psp
-      - /psp/node_modules
+    extends: base
+    entrypoint: npm run migrate
     depends_on:
       - postgres
+
   test:
-    build:
-      context: .
-    entrypoint: npm run test
-    environment:
-      - NODE_ENV=test
-      - SQS_ENDPOINT=http://sqs:9324/queue
-      - PAYABLES_QUEUE=payables-queue.fifo
-      - DATABASE_HOST=postgres
-      - DATABASE_PORT=5432
-      - DATABASE_USER=postgres
-      - DATABASE_PASSWORD=postgres
-      - DATABASE_NAME=postgres
-    volumes:
-      - .:/psp
-      - /psp/node_modules
+    extends: base
+    entrypoint: npm test
     depends_on:
-      - migrate
+      postgres:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+      migrate:
+        condition: service_started

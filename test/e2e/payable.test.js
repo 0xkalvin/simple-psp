@@ -2,7 +2,7 @@ const test = require('ava');
 const request = require('supertest');
 
 test.beforeEach(async (t) => {
-  const app = require('../../src/server/app');
+  const app = require('../../src/transporters/rest/application');
 
   t.context.app = app;
 });

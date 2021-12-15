@@ -1,11 +1,24 @@
-FROM node:12.10-alpine
+FROM node:16-alpine
 
-WORKDIR /psp
+ARG NODE_ENV
 
-COPY package.json .
+RUN npm i npm@latest -g
 
-RUN npm i
+RUN mkdir /app && chown node:node /app
 
-COPY . .
+WORKDIR /app
 
-EXPOSE 3000
+USER node
+
+COPY --chown=node:node package.json package-lock.json* ./
+
+RUN if [ "$NODE_ENV" != "production" ] ; \
+    then \
+        npm install; \
+    else \
+        npm ci; \
+    fi
+
+COPY --chown=node:node . .
+
+CMD ["sh", "/app/scripts/start.sh"]

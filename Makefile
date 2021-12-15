@@ -1,21 +1,18 @@
-.PHONY: default all dev build test down database
+.PHONY: default all build test down
 
 default: all
-
-dev:
-	npm run dev
 
 build:
 	@docker-compose build --no-cache
 
 all:
-	@docker-compose up psp payable-worker
+	@docker-compose up rest-server sqs-workers
 
 infra:
-	@docker-compose up -d postgres sqs
+	@docker-compose up -d postgres localstack
 
 down:
 	@docker-compose down --rmi local --remove-orphans
 
 test:
-	@docker-compose up test
+	@docker-compose run --rm test
