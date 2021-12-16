@@ -9,6 +9,25 @@ const queueToWorkerMap = new Map([
   ['payables-creation-queue', payableWorkers.createPayable],
 ]);
 
+async function gracefullyShutdown() {
+  try {
+    await Promise.all([
+      postgres.closeConnection(),
+    ]);
+
+    logger.info({
+      message: 'Cleanup has finished and process is about to shutdown',
+      uptime: process.uptime(),
+    });
+  } catch (error) {
+    logger.error({
+      message: 'Failed to gracefully shutdown worker',
+      error_message: error.message,
+      error_stack: error.stack,
+    });
+  }
+}
+
 async function run() {
   try {
     await Promise.all([
@@ -58,6 +77,13 @@ async function run() {
         error_stack: error.stack,
       });
     });
+  });
+
+  process.once('SIGTERM', async () => {
+    await gracefullyShutdown();
+  });
+  process.once('SIGINT', async () => {
+    await gracefullyShutdown();
   });
 }
 
