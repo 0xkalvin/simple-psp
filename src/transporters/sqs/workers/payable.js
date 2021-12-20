@@ -1,7 +1,6 @@
 const payableService = require('../../../services/payable');
-const logger = require('../../../lib/logger')('PAYABLES_WORKERS');
 
-function createPayable(queueConfig) {
+function createPayable() {
   return async (message) => {
     const payload = JSON.parse(message.Body);
 
@@ -27,6 +26,15 @@ function createPayable(queueConfig) {
   };
 }
 
+function settlePayables() {
+  return async (message) => {
+    const payablesIds = JSON.parse(message.Body);
+
+    await payableService.settlePayables(payablesIds);
+  };
+}
+
 module.exports = {
   createPayable,
+  settlePayables,
 };

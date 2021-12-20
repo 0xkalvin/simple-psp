@@ -44,9 +44,9 @@ This section describes the resources that make up the API
 #### Request
 
 ```bash
-curl -XPOST "http://localhost:3000/transactions" --header "Content-Type: application/json"  --data '{
+curl -XPOST "http://localhost:3000/transactions" --header "Content-Type: application/json" --header "x-customer-id: 123"  --data '{
     "description": "Lightsaber",
-    "amount": "2500.00",
+    "amount": "2500",
     "payment_method": "credit_card",
     "card_number": "4111111111111111",
     "card_holder_name": "Luke Skywalker",
