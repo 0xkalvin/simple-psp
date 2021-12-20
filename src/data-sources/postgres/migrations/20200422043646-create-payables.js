@@ -3,13 +3,16 @@ const tableName = 'Payables';
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable(tableName, {
     id: {
-      type: Sequelize.UUID,
-      defaultValue: Sequelize.UUIDV4,
+      type: Sequelize.STRING,
       primaryKey: true,
       allowNull: false,
     },
     transaction_id: {
-      type: Sequelize.UUID,
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    customer_id: {
+      type: Sequelize.STRING,
       allowNull: false,
     },
     status: {

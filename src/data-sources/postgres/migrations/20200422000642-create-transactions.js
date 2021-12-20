@@ -3,9 +3,12 @@ const tableName = 'Transactions';
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable(tableName, {
     id: {
-      type: Sequelize.UUID,
-      defaultValue: Sequelize.UUIDV4,
+      type: Sequelize.STRING,
       primaryKey: true,
+      allowNull: false,
+    },
+    customer_id: {
+      type: Sequelize.STRING,
       allowNull: false,
     },
     description: {
@@ -13,13 +16,18 @@ module.exports = {
       allowNull: false,
     },
     amount: {
-      type: Sequelize.FLOAT,
+      type: Sequelize.BIGINT,
       allowNull: false,
     },
     payment_method: {
       type: Sequelize.ENUM,
       allowNull: false,
       values: ['debit_card', 'credit_card'],
+    },
+    status: {
+      type: Sequelize.ENUM,
+      allowNull: false,
+      values: ['pending_payment', 'paid', 'pending_refund', 'refunded'],
     },
     card_last_four_numbers: {
       type: Sequelize.STRING(4),
@@ -47,5 +55,5 @@ module.exports = {
     },
   }),
 
-  down: (queryInterface, Sequelize) => queryInterface.dropTable(tableName),
+  down: (queryInterface) => queryInterface.dropTable(tableName),
 };

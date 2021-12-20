@@ -3,7 +3,10 @@ const payableService = require('../../../services/payable');
 async function list(request, response, next) {
   try {
     const { page, limit } = request.query;
+    const customerId = request.headers['x-customer-id'];
+
     const payables = await payableService.getPayables({
+      customerId,
       page,
       limit,
     });

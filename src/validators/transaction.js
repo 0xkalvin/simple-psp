@@ -8,6 +8,7 @@ const createTransactionSchema = Joi.object({
 
   amount: Joi
     .number()
+    .integer()
     .positive()
     .required(),
 
@@ -31,6 +32,16 @@ const createTransactionSchema = Joi.object({
   cardVerificationCode: Joi
     .string()
     .length(3)
+    .required(),
+
+  customerId: Joi
+    .string()
+    .required(),
+});
+
+const listTransactionSchema = Joi.object({
+  customerId: Joi
+    .string()
     .required(),
 });
 
@@ -59,7 +70,27 @@ function validateTransactionCreationPayload(payload) {
   }
 }
 
+function validateTransactionListPayload(payload) {
+  try {
+    const result = listTransactionSchema.validate(payload, {
+      abortEarly: false,
+    });
+
+    const error = result.error ? buildErrorList(result.error) : null;
+
+    return {
+      error,
+    };
+  } catch (error) {
+    return {
+      error,
+    };
+  }
+}
+
 module.exports = {
   createTransactionSchema,
+  listTransactionSchema,
   validateTransactionCreationPayload,
+  validateTransactionListPayload,
 };

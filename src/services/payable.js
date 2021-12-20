@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+
 const logger = require('../lib/logger')('PAYABLE_SERVICE');
 const payableRepository = require('../repositories/payable');
 const { parsePaginationParameters } = require('../lib/pagination');
@@ -15,7 +17,7 @@ const payablesRules = {
   },
 };
 
-const discountFee = (amount, fee) => ((100 - fee) * amount) / 100;
+const discountFee = (amount, fee) => Math.ceil(((100 - fee) * amount) / 100);
 
 const setPaymentDate = (transactionDate, daysUntilPayment) => {
   const createdAtAsDate = new Date(transactionDate);
@@ -29,6 +31,7 @@ function buildPayablePayloadFromTransaction(transaction) {
     amount,
     createdAt,
     id,
+    customerId,
     paymentMethod,
   } = transaction;
 
@@ -41,38 +44,45 @@ function buildPayablePayloadFromTransaction(transaction) {
   );
 
   return {
+    amount: payableAmount,
+    customer_id: customerId,
     fee,
+    payment_date: payablePaymentDate,
     status,
     transaction_id: id,
-    amount: payableAmount,
-    payment_date: payablePaymentDate,
   };
 }
 
 async function createPayable(payload) {
   try {
     const {
-      fee,
-      status,
-      transactionid,
       amount,
+      customerId,
+      fee,
       paymentDate,
       paymentMethod,
+      status,
+      transactionid,
     } = payload;
 
+    const id = crypto.randomUUID();
+
     const payable = await payableRepository.createPayable({
-      fee,
-      status,
-      transactionid,
       amount,
+      customerId,
+      fee,
+      id,
       paymentDate,
       paymentMethod,
+      status,
+      transactionid,
     });
 
     logger.debug({
       message: 'Successfully created payable',
       transaction_id: payable.transaction_id,
       payable_id: payable.id,
+      customer_id: customerId,
     });
 
     return payable;
@@ -90,8 +100,10 @@ async function createPayable(payload) {
 
 async function getPayables(filters) {
   const { limit, offset } = parsePaginationParameters(filters.page, filters.limit);
+  const { customerId } = filters;
 
   const payables = await payableRepository.getPayables({
+    customerId,
     limit,
     offset,
   });

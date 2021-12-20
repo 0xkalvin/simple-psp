@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+
 const payableRepository = require('../repositories/payable');
 const payableService = require('./payable');
 const transactionRepository = require('../repositories/transaction');
@@ -9,6 +11,15 @@ const { parsePaginationParameters } = require('../lib/pagination');
 
 const getCardLastFourNumbers = (cardNumber) => cardNumber.substr(-4);
 
+const transactionRules = {
+  credit_card: {
+    status: 'pending_payment',
+  },
+  debit_card: {
+    status: 'paid',
+  },
+};
+
 async function createTransaction(payload) {
   const {
     amount,
@@ -17,6 +28,7 @@ async function createTransaction(payload) {
     cardHolderName,
     cardNumber,
     cardVerificationCode,
+    customerId,
     paymentMethod,
   } = payload;
 
@@ -27,6 +39,7 @@ async function createTransaction(payload) {
     cardHolderName,
     cardNumber,
     cardVerificationCode,
+    customerId,
     paymentMethod,
   });
 
@@ -36,6 +49,8 @@ async function createTransaction(payload) {
 
   try {
     const cardLastFourNumbers = getCardLastFourNumbers(cardNumber);
+    const id = crypto.randomUUID();
+    const { status } = transactionRules[paymentMethod];
 
     const transaction = await transactionRepository.createTransaction({
       amount,
@@ -44,12 +59,16 @@ async function createTransaction(payload) {
       cardHolderName,
       cardLastFourNumbers,
       cardVerificationCode,
+      customerId,
+      id,
       paymentMethod,
+      status,
     });
 
     const payablePayload = payableService.buildPayablePayloadFromTransaction({
       amount,
       createdAt: transaction.createdAt,
+      customerId,
       id: transaction.id,
       paymentMethod,
     });
@@ -59,6 +78,7 @@ async function createTransaction(payload) {
     logger.debug({
       message: 'Successfully created transaction',
       transaction_id: transaction.id,
+      customer_id: customerId,
     });
 
     return transaction;
@@ -76,7 +96,18 @@ async function createTransaction(payload) {
 async function getTransactions(filters) {
   const { limit, offset } = parsePaginationParameters(filters.page, filters.limit);
 
+  const { customerId } = filters;
+
+  const { error: validationError } = transactionValidator.validateTransactionListPayload({
+    customerId,
+  });
+
+  if (validationError) {
+    throw new errors.UnprocessableEntityError(validationError);
+  }
+
   const transactions = await transactionRepository.getTransactions({
+    customerId,
     limit,
     offset,
   });
