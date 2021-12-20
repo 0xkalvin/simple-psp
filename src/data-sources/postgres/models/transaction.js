@@ -2,10 +2,13 @@ const { DataTypes } = require('sequelize');
 
 const attributes = {
   id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
+    type: DataTypes.STRING,
     allowNull: false,
     primaryKey: true,
+  },
+  customer_id: {
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   amount: {
     type: DataTypes.DOUBLE,
@@ -19,6 +22,11 @@ const attributes = {
     type: DataTypes.ENUM,
     allowNull: false,
     values: ['debit_card', 'credit_card'],
+  },
+  status: {
+    type: DataTypes.ENUM,
+    allowNull: false,
+    values: ['pending_payment', 'paid', 'pending_refund', 'refunded'],
   },
   card_last_four_numbers: {
     type: DataTypes.STRING(4),

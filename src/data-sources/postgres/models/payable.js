@@ -2,10 +2,13 @@ const { DataTypes } = require('sequelize');
 
 const attributes = {
   id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
+    type: DataTypes.STRING,
     allowNull: false,
     primaryKey: true,
+  },
+  customer_id: {
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   status: {
     type: DataTypes.ENUM,
@@ -46,7 +49,7 @@ const associate = (instance, models) => {
 
   return instance.belongsTo(Transaction, {
     foreignKey: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING,
       allowNull: false,
       field: 'transaction_id',
       name: 'transaction_id',

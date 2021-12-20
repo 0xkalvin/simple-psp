@@ -30,17 +30,21 @@ async function createPayable(payload) {
 
   try {
     const {
+      amount,
+      customerId,
       fee,
+      id,
+      paymentDate,
       status,
       transactionid,
-      amount,
-      paymentDate,
     } = payload;
 
     const createdPayable = await postgres.pool.models.Payable.create(
       {
         amount,
+        customer_id: customerId,
         fee,
+        id,
         status,
         transaction_id: transactionid,
         payment_date: paymentDate,
@@ -53,9 +57,10 @@ async function createPayable(payload) {
     return {
       id: createdPayable.id,
       amount,
+      customerId,
       fee,
       status,
-      transaction_id: transactionid,
+      transactionid,
       payment_date: paymentDate,
     };
   } catch (error) {
@@ -72,7 +77,7 @@ async function createPayable(payload) {
 }
 
 async function getPayables(filters) {
-  const { limit, offset } = filters;
+  const { customerId, limit, offset } = filters;
 
   const transactions = await postgres.pool.models.Payable.findAll({
     offset,
@@ -80,6 +85,9 @@ async function getPayables(filters) {
     order: [
       ['created_at', 'DESC'],
     ],
+    where: {
+      customer_id: customerId,
+    },
   });
 
   return transactions;

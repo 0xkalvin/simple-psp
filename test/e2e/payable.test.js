@@ -12,6 +12,7 @@ test('should return 200 from payables endpoint', async (t) => {
 
   const res = await request(app)
     .get('/payables')
+    .set('x-customer-id', '123')
     .send();
 
   t.is(res.status, 200);

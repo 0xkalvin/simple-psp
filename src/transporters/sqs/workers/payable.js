@@ -6,21 +6,23 @@ function createPayable(queueConfig) {
     const payload = JSON.parse(message.Body);
 
     const {
-      fee,
-      status,
-      transaction_id: transactionid,
       amount,
+      customer_id: customerId,
+      fee,
       payment_date: paymentDate,
       payment_method: paymentMethod,
+      status,
+      transaction_id: transactionid,
     } = payload;
 
     await payableService.createPayable({
-      fee,
-      status,
-      transactionid,
       amount,
+      customerId,
+      fee,
       paymentDate,
       paymentMethod,
+      status,
+      transactionid,
     });
   };
 }

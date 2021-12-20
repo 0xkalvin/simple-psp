@@ -12,6 +12,8 @@ async function create(request, response, next) {
       payment_method: paymentMethod,
     } = request.body;
 
+    const customerId = request.headers['x-customer-id'];
+
     const transaction = await transactionService.createTransaction({
       amount,
       description,
@@ -19,6 +21,7 @@ async function create(request, response, next) {
       cardHolderName,
       cardNumber,
       cardVerificationCode,
+      customerId,
       paymentMethod,
     });
 
@@ -31,10 +34,12 @@ async function create(request, response, next) {
 async function list(request, response, next) {
   try {
     const { page, limit } = request.query;
+    const customerId = request.headers['x-customer-id'];
 
     const transactions = await transactionService.getTransactions({
-      page,
+      customerId,
       limit,
+      page,
     });
 
     return response.status(200).json(transactions);

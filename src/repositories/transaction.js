@@ -12,7 +12,10 @@ async function createTransaction(payload) {
       cardHolderName,
       cardLastFourNumbers,
       cardVerificationCode,
+      customerId,
+      id,
       paymentMethod,
+      status,
     } = payload;
 
     const createdTransaction = await postgres.pool.models.Transaction.create(
@@ -23,7 +26,10 @@ async function createTransaction(payload) {
         card_holder_name: cardHolderName,
         card_last_four_numbers: cardLastFourNumbers,
         card_verification_code: cardVerificationCode,
+        customer_id: customerId,
+        id,
         payment_method: paymentMethod,
+        status,
       },
       { transaction: databaseTransaction },
     );
@@ -38,7 +44,9 @@ async function createTransaction(payload) {
       cardHolderName,
       cardLastFourNumbers,
       cardVerificationCode,
+      customerId,
       paymentMethod,
+      status,
       createdAt: createdTransaction.created_at,
     };
   } catch (error) {
@@ -55,7 +63,7 @@ async function createTransaction(payload) {
 }
 
 async function getTransactions(filters) {
-  const { limit, offset } = filters;
+  const { customerId, limit, offset } = filters;
 
   const transactions = await postgres.pool.models.Transaction.findAll({
     offset,
@@ -63,6 +71,9 @@ async function getTransactions(filters) {
     order: [
       ['created_at', 'DESC'],
     ],
+    where: {
+      customer_id: customerId,
+    },
   });
 
   return transactions;
