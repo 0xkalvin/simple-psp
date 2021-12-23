@@ -1,5 +1,8 @@
-const { postgres } = require('../data-sources');
+const crypto = require('crypto');
+
 const logger = require('../lib/logger')('TRANSACTION_REPOSITORY');
+const { postgres, sqs } = require('../data-sources');
+const sqsConfig = require('../config/sqs');
 
 async function createTransaction(payload) {
   const databaseTransaction = await postgres.pool.transaction();
@@ -89,8 +92,48 @@ async function getTransactionById(transactionId) {
   return transaction;
 }
 
+async function enqueueTransactionsToSettle(transactionIds) {
+  try {
+    const result = await sqs.sqsClient.sendMessage({
+      MessageBody: JSON.stringify(transactionIds),
+      QueueUrl: sqsConfig.transactionSettlementQueueURL,
+      MessageGroupId: crypto.randomUUID(),
+    }).promise();
+
+    return result;
+  } catch (error) {
+    logger.error({
+      message: 'Failed to enqueue transactions to settle on sqs',
+      error_message: error.message,
+      error_stack: error.stack,
+    });
+
+    throw error;
+  }
+}
+
+async function settleTransactions(transactionIds) {
+  const result = await postgres.pool.models.Transaction.update(
+    {
+      status: 'paid',
+    },
+    {
+      raw: true,
+      where: {
+        id: {
+          [postgres.pool.Sequelize.Op.in]: transactionIds,
+        },
+      },
+    },
+  );
+
+  return result;
+}
+
 module.exports = {
   createTransaction,
   getTransactionById,
   getTransactions,
+  enqueueTransactionsToSettle,
+  settleTransactions,
 };

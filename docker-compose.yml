@@ -109,3 +109,14 @@ services:
         condition: service_healthy
       migrate:
         condition: service_started
+
+  jobs:
+    extends: base
+    entrypoint: npm run start:jobs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+      migrate:
+        condition: service_started

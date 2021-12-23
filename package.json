@@ -12,6 +12,7 @@
     "lint:fix": "eslint . --ext .js --fix ",
     "start:rest": "nodemon src/transporters/rest/entrypoint.js",
     "start:sqs": "nodemon src/transporters/sqs/entrypoint.js",
+    "start:jobs": "node src/transporters/jobs/entrypoint.js",
     "test": "NODE_ENV=test ava --verbose 'test/**/*.test.js'"
   },
   "dependencies": {
@@ -20,6 +21,7 @@
     "express": "^4.17.1",
     "helmet": "^3.23.3",
     "joi": "^17.5.0",
+    "moment": "^2.29.1",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
     "pino": "^7.5.1",

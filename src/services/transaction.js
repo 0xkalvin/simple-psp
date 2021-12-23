@@ -121,8 +121,17 @@ async function getOneTransaction(id) {
   return transaction;
 }
 
+async function settleTransactions(transactionIds) {
+  const ids = transactionIds.map(({ transactionId }) => transactionId);
+
+  const updatedTransactions = await transactionRepository.settleTransactions(ids);
+
+  return updatedTransactions;
+}
+
 module.exports = {
   createTransaction,
   getOneTransaction,
   getTransactions,
+  settleTransactions,
 };

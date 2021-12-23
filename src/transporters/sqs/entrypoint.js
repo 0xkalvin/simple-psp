@@ -1,12 +1,15 @@
-const logger = require('../../lib/logger')('REST_SERVER_ENTRYPOINT');
+const logger = require('../../lib/logger')('SQS_ENTRYPOINT');
 const sqsConfig = require('../../config/sqs');
 const SQSPoller = require('../../lib/sqs-poller');
 const { postgres, sqs } = require('../../data-sources');
 
 const payableWorkers = require('./workers/payable');
+const transactionWorkers = require('./workers/transaction');
 
 const queueToWorkerMap = new Map([
   ['payables-creation-queue', payableWorkers.createPayable],
+  ['payables-settlement-queue', payableWorkers.settlePayables],
+  ['transactions-settlement-queue', transactionWorkers.settleTransactions],
 ]);
 
 async function gracefullyShutdown() {
