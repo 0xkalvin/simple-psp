@@ -11,11 +11,11 @@ data "aws_iam_policy_document" "server_task_policy_document" {
 
 resource "aws_iam_role" "server_task_iam_role" {
   name               = "${var.project}-${terraform.workspace}-task-role"
-  assume_role_policy = "${data.aws_iam_policy_document.server_task_policy_document.json}"
+  assume_role_policy = data.aws_iam_policy_document.server_task_policy_document.json
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_role" {
-  role       = "${aws_iam_role.server_task_iam_role.name}"
+  role       = aws_iam_role.server_task_iam_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
@@ -25,10 +25,13 @@ data "aws_iam_policy_document" "sqs_ssm_iam_policy_document" {
       "sqs:SendMessage",
       "sqs:ReceiveMessage",
       "sqs:DeleteMessage",
+      "sqs:List*",
     ]
 
     resources = [
-      "${module.payables_sqs_queue.arn}",
+      aws_sqs_queue.payables_creation_queue.arn,
+      aws_sqs_queue.payables_settlement_queue.arn,
+      aws_sqs_queue.transactions_settlement_queue.arn,
     ]
   }
 
@@ -39,8 +42,8 @@ data "aws_iam_policy_document" "sqs_ssm_iam_policy_document" {
       "ssm:DescribeParameters",
     ]
 
-    "resources" = [
-      "arn:aws:ssm:${var.region}:*:parameter/${var.project}*",
+    resources = [
+      "arn:aws:ssm:${var.aws_region}:*:parameter/${var.project}*",
     ]
   }
 }
@@ -48,10 +51,10 @@ data "aws_iam_policy_document" "sqs_ssm_iam_policy_document" {
 resource "aws_iam_policy" "sqs_iam_policy" {
   name        = "${var.project}-sqs-${terraform.workspace}"
   description = "SQS Access Policy ${var.project} at ${terraform.workspace}"
-  policy      = "${data.aws_iam_policy_document.sqs_ssm_iam_policy_document.json}"
+  policy      = data.aws_iam_policy_document.sqs_ssm_iam_policy_document.json
 }
 
 resource "aws_iam_role_policy_attachment" "sqs_iam_role_policy_attachment" {
-  role       = "${aws_iam_role.server_task_iam_role.name}"
-  policy_arn = "${aws_iam_policy.sqs_iam_policy.arn}"
+  role       = aws_iam_role.server_task_iam_role.name
+  policy_arn = aws_iam_policy.sqs_iam_policy.arn
 }

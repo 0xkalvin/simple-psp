@@ -1,4 +1,8 @@
-module "ecr" {
-  source = "github.com/0xkalvin/terraform-modules//ecr"
-  name   = "${var.project}-${terraform.workspace}"
+resource "aws_ecr_repository" "ecr_repo" {
+  name                 = var.project
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
 }

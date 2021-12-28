@@ -22,6 +22,8 @@ async function gracefullyShutdown() {
       message: 'Cleanup has finished and process is about to shutdown',
       uptime: process.uptime(),
     });
+
+    process.exit(0);
   } catch (error) {
     logger.error({
       message: 'Failed to gracefully shutdown worker',
@@ -37,6 +39,10 @@ async function run() {
       postgres.checkConnection(),
       sqs.checkConnection(),
     ]);
+
+    logger.info({
+      message: 'SQS Worker successfully connected to data sources',
+    });
   } catch (error) {
     logger.fatal({
       message: 'Failed to connect to data sources, exiting now',

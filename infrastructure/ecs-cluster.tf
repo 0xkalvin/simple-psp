@@ -1,4 +1,3 @@
-module "ecs_cluster" {
-  source = "github.com/0xkalvin/terraform-modules//ecs-cluster"
-  name   = "microservices-cluster-${terraform.workspace}"
+resource "aws_ecs_cluster" "ecs_cluster" {
+  name = local.ecs_cluster_name
 }
