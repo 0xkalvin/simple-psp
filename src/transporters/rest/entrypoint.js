@@ -16,6 +16,10 @@ async function run() {
       postgres.checkConnection(),
       sqs.checkConnection(),
     ]);
+
+    logger.info({
+      message: 'Rest Server successfully connected to data sources',
+    });
   } catch (error) {
     logger.fatal({
       message: 'Failed to connect to data sources, exiting now',

@@ -2,18 +2,22 @@ variable "profile" {
   default = "default"
 }
 
-variable "region" {
+variable "aws_region" {
   default = "us-east-1"
 }
 
 variable "project" {
-  type = "string"
+  type = string
 }
 
-variable "environment_name" {
-  type = "string"
+variable "cw_alarm_actions" {
+  default = []
 }
 
-variable "container_port" {
-  default = 3000
+variable "cw_insufficient_data_actions" {
+  default = []
+}
+
+variable "cw_ok_actions" {
+  default = []
 }

@@ -129,6 +129,7 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+*.hcl
 
 # Ignore plans
 plan.apply
